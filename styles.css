@@ -64,3 +64,11 @@ body, html {
 #dot-counter {
     top: 40px;
 }
+
+.dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #00ff00;
+    border-radius: 50%;
+}
