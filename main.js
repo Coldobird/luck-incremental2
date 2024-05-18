@@ -1,26 +1,26 @@
-// scripts.js
+// main.js
 
+const gameScreen = document.getElementById('game-screen');
 const player = document.getElementById('player');
 const joystick = document.getElementById('joystick');
 const joystickContainer = document.getElementById('joystick-container');
 const counterDisplay = document.getElementById('counter');
 const dotCounterDisplay = document.getElementById('dot-counter');
+const upgradeButton = document.getElementById('upgrade-button');
 
+const keys = {};
+let playerX = gameScreen.offsetWidth / 2 - player.offsetWidth / 2;
+let playerY = gameScreen.offsetHeight / 2 - player.offsetHeight / 2;
 let joystickCenterX = 0;
 let joystickCenterY = 0;
-let playerX = 50;
-let playerY = 50;
 let joystickActive = false;
 let dx = 0;
 let dy = 0;
 const joystickRadius = joystickContainer.offsetWidth / 2 - joystick.offsetWidth / 2;
 let counter = 0;
+let maxDots = 5;
 
-const gameContainer = document.getElementById('game-container');
-const gameContainerRect = gameContainer.getBoundingClientRect();
-const keys = {};
-const maxDots = 5;
-
+// Functions related to the game
 const updateJoystickCenter = () => {
     const joystickContainerRect = joystickContainer.getBoundingClientRect();
     joystickCenterX = joystickContainerRect.left + joystickContainerRect.width / 2;
@@ -46,8 +46,8 @@ const movePlayer = () => {
         playerX += 2;
     }
 
-    playerX = Math.max(0, Math.min(playerX, gameContainerRect.width - player.clientWidth));
-    playerY = Math.max(0, Math.min(playerY, gameContainerRect.height - player.clientHeight));
+    playerX = Math.max(0, Math.min(playerX, gameScreen.clientWidth - player.clientWidth));
+    playerY = Math.max(0, Math.min(playerY, gameScreen.clientHeight - player.clientHeight));
     player.style.left = `${playerX}px`;
     player.style.top = `${playerY}px`;
 
@@ -61,9 +61,9 @@ const createDot = () => {
     if (currentDots < maxDots) {
         const dot = document.createElement('div');
         dot.className = 'dot';
-        dot.style.left = `${Math.random() * (gameContainerRect.width - 10)}px`;
-        dot.style.top = `${Math.random() * (gameContainerRect.height - 10)}px`;
-        gameContainer.appendChild(dot);
+        dot.style.left = `${Math.random() * (gameScreen.clientWidth - 10)}px`;
+        dot.style.top = `${Math.random() * (gameScreen.clientHeight - 10)}px`;
+        gameScreen.appendChild(dot);
         updateDotCounter();
     }
 };
@@ -95,6 +95,7 @@ const updateDotCounter = () => {
 
 setInterval(createDot, 1000);
 
+// Joystick Event Handlers
 joystick.addEventListener('touchstart', (e) => {
     e.preventDefault();
     joystickActive = true;
@@ -130,6 +131,13 @@ joystick.addEventListener('touchend', (e) => {
     joystick.style.transform = 'translate(0, 0)';
 });
 
+// Button Event Handlers
+upgradeButton.addEventListener('click', () => {
+    gameScreen.classList.add('hidden');
+    document.getElementById('upgrade-screen').classList.remove('hidden');
+});
+
+// Keyboard Event Handlers
 const handleKeyDown = (e) => {
     keys[e.key.toLowerCase()] = true;
 };
@@ -147,3 +155,6 @@ requestAnimationFrame(movePlayer);
 // Ensure the player starts at the center
 player.style.left = `${playerX}px`;
 player.style.top = `${playerY}px`;
+
+// Update the dot counter at the start
+updateDotCounter();

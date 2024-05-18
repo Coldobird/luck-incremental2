@@ -7,22 +7,27 @@
     <title>Incremental Game</title>
 </head>
 <body>
-    <div id="game-container">
-        <div id="counter">Score: 0</div>
-        <div id="dot-counter">Dots: 0/5</div>
-        <div id="player"></div>
-    </div>
-    <div id="joystick-container">
-        <div id="joystick"></div>
+    <!-- Main Game Screen -->
+    <div id="game-screen" class="screen">
+        <div id="game-container">
+            <div id="counter">Score: 0</div>
+            <div id="dot-counter">Dots: 0/5</div>
+            <div id="player"></div>
+        </div>
+        <div id="joystick-container">
+            <div id="joystick"></div>
+        </div>
+        <button id="upgrade-button" class="nav-button">Upgrade</button>
     </div>
 
     <!-- Upgrade Screen -->
-    <div id="upgrade-screen" class="hidden">
+    <div id="upgrade-screen" class="screen hidden">
         <h2>Upgrades</h2>
         <div>
             <button id="upgrade-max-dots">Increase Max Dots</button>
         </div>
-        <button id="close-upgrade-screen">Close</button>
+        <button id="close-upgrade-screen" class="nav-button">Close</button>
+        <button id="back-to-game" class="nav-button">Back to Game</button>
     </div>
 
     <script src="main.js"></script>
