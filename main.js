@@ -1,7 +1,6 @@
 // main.js
 
 const gameScreen = document.getElementById('game-screen');
-const playableArea = document.getElementById('game-container');
 const player = document.getElementById('player');
 const joystick = document.getElementById('joystick');
 const joystickContainer = document.getElementById('joystick-container');
@@ -28,6 +27,9 @@ const updateJoystickCenter = () => {
     joystickCenterY = joystickContainerRect.top + joystickContainerRect.height / 2;
 };
 
+const gameContainerInner = document.getElementById('game-container-inner');
+const playableArea = gameContainerInner;
+
 const movePlayer = () => {
     if (joystickActive) {
         playerX += dx * 0.1;
@@ -47,8 +49,8 @@ const movePlayer = () => {
         playerX += 2;
     }
 
-    playerX = Math.max(10, Math.min(playerX, playableArea.clientWidth - player.clientWidth + 10));
-    playerY = Math.max(10, Math.min(playerY, playableArea.clientHeight - player.clientHeight + 10));
+    playerX = Math.max(9, Math.min(playerX, playableArea.clientWidth - player.clientWidth + 9));
+    playerY = Math.max(11, Math.min(playerY, playableArea.clientHeight - player.clientHeight + 9));
     player.style.left = `${playerX}px`;
     player.style.top = `${playerY}px`;
 
@@ -62,8 +64,8 @@ const createDot = () => {
     if (currentDots < maxDots) {
         const dot = document.createElement('div');
         dot.className = 'dot';
-        dot.style.left = `${Math.random() * (playableArea.clientWidth - 10)}px`;
-        dot.style.top = `${Math.random() * (playableArea.clientHeight - 10)}px`;
+        dot.style.left = `${Math.random() * (playableArea.clientWidth - dot.clientWidth - 10)}px`;
+        dot.style.top = `${Math.random() * (playableArea.clientHeight - dot.clientHeight - 10)}px`;
         playableArea.appendChild(dot);
         updateDotCounter();
     }
