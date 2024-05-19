@@ -49,8 +49,9 @@ const movePlayer = () => {
         playerX += 2;
     }
 
-    playerX = Math.max(9, Math.min(playerX, playableArea.clientWidth - player.clientWidth + 9));
-    playerY = Math.max(11, Math.min(playerY, playableArea.clientHeight - player.clientHeight + 9));
+    const playerRadius = player.clientWidth / 2
+    playerX = Math.max(playerRadius, Math.min(playerX, playableArea.clientWidth - playerRadius));
+    playerY = Math.max(playerRadius, Math.min(playerY, playableArea.clientHeight - playerRadius));
     player.style.left = `${playerX}px`;
     player.style.top = `${playerY}px`;
 
@@ -64,9 +65,12 @@ const createDot = () => {
     if (currentDots < maxDots) {
         const dot = document.createElement('div');
         dot.className = 'dot';
-        dot.style.left = `${Math.random() * (playableArea.clientWidth - dot.clientWidth - 10)}px`;
-        dot.style.top = `${Math.random() * (playableArea.clientHeight - dot.clientHeight - 10)}px`;
         playableArea.appendChild(dot);
+
+        const spawnableArea = playableArea.clientWidth - dot.clientWidth
+        const dotRadius = dot.clientWidth / 2
+        dot.style.left = `${Math.random() * spawnableArea}px`;
+        dot.style.top = `${Math.random() * spawnableArea}px`;
         updateDotCounter();
     }
 };
@@ -96,7 +100,7 @@ const updateDotCounter = () => {
     dotCounterDisplay.textContent = `Dots: ${currentDots}/${maxDots}`;
 };
 
-setInterval(createDot, 100);
+setInterval(createDot, 1);
 
 // Joystick Event Handlers
 joystick.addEventListener('touchstart', (e) => {
