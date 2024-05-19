@@ -17,6 +17,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -41,27 +42,6 @@ body, html {
     transform: translate(-50%, -50%);
 }
 
-#joystick-container {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 150px;
-    background-color: #cccccc;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    touch-action: none;
-}
-
-#joystick {
-    width: 50px;
-    height: 50px;
-    background-color: #888888;
-    border-radius: 50%;
-}
 
 #counter, #dot-counter {
     position: absolute;
@@ -88,8 +68,6 @@ body, html {
 #upgrade-screen {
     z-index: 1; /* Ensure upgrade screen is on top */
     background-color: #fff;
-    padding: 20px;
-    border: 1px solid #000;
 }
 
 .hidden {
