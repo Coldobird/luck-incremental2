@@ -1,3 +1,4 @@
+// upgrade.js
 // Upgrade Screen Variables
 const backToGameButton = document.getElementById('back-to-game');
 const upgradeScreen = document.getElementById('upgrade-screen');

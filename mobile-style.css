@@ -1,9 +1,10 @@
+/* mobile-style.css */
+
 @media (pointer:none), (pointer:coarse) {
   #joystick-container {
       position: absolute;
       bottom: 20px;
       left: 10%;
-      transform: translateX(-50%);
       width: 150px;
       height: 150px;
       background-color: #cccccc;
