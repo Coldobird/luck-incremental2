@@ -148,13 +148,15 @@ joystick.addEventListener('touchend', (e) => {
   joystick.style.transform = 'translate(0, 0)';
 });
 
-// Button Event Handlers
+
 const goToUpgrades = () => {
   gameScreen.classList.add('hidden');
   document.querySelector('upgrade-screen').classList.remove('hidden');
+  upgradeTree.displayUpgradeTree(container);
 };
 
 const goToMain = () => {
+  upgradeTree.removeUpgradeTree();
   document.querySelector('upgrade-screen').classList.add('hidden');
   gameScreen.classList.remove('hidden');
 };

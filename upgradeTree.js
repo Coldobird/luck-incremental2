@@ -27,6 +27,7 @@ class UpgradeTree {
 
   displayUpgradeTree(container) {
     this.container = container;
+
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
@@ -126,17 +127,22 @@ class UpgradeTree {
       console.log(`Upgrading: ${upgrade.name}`);
     }
   }
+
+  removeUpgradeTree() {
+    if (this.container) {
+      while (this.container.firstChild) {
+        this.container.removeChild(this.container.firstChild);
+      }
+    }
+  }
 }
 
 const upgrades = [
   { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
-
   { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
-
   { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
   { name: 'Upgrade 1', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.25x spawnRate, 2x max' },
   { name: 'Upgrade 2', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
-
   { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
   { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +.5 range' },
   { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, Upgrade 2', upgrade: '2x max' },
@@ -145,8 +151,4 @@ const upgrades = [
 
 const container = document.getElementById('upgrade-container');
 const upgradeTree = new UpgradeTree(upgrades);
-upgradeTree.displayUpgradeTree(container);
 
-function handleUpgrade(upgradeId) {
-  upgradeTree.handleUpgrade(upgradeId);
-}

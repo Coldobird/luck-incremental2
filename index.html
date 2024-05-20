@@ -11,6 +11,7 @@
         <score-counter>Score: 0</score-counter>
         <dot-counter></dot-counter>
     </always-on-screen>
+    
     <game-screen class="screen">
         <game-container>
             <game-container-inner>
@@ -22,16 +23,12 @@
         </joystick-container>
         <button class="nav-button" onclick="goToUpgrades()">Upgrade</button>
     </game-screen>
-    <upgrade-screen class="screen hidden">
-        <button class="nav-button" onclick="upgradeMaxDots()">Upgrade Max Dots</button>
-        <button class="nav-button" onclick="upgradeSpawnDelay(1000)">Upgrade Spawn Delay</button>
-        <spawn-delay-info>5000 -> 4000</spawn-delay-info>
 
+    <upgrade-screen class="screen hidden">
+        <div id="upgrade-container"></div>
         <button class="nav-button" onclick="goToMain()">Back</button>
     </upgrade-screen>
 
-    <div id="upgrade-container">
-    </div>
     
     <script src="upgrade.js"></script>
     <script src="upgradeTree.js"></script>
