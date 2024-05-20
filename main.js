@@ -4,8 +4,6 @@ const joystick = document.querySelector('joystick');
 const joystickContainer = document.querySelector('joystick-container');
 const counterDisplay = document.querySelector('score-counter');
 const dotCounterDisplay = document.querySelector('dot-counter');
-const upgradeButton = document.querySelector('btn-upgrade-max-dots');
-
 const keys = {};
 let playerX = gameScreen.offsetWidth / 2 - player.offsetWidth / 2;
 let playerY = gameScreen.offsetHeight / 2 - player.offsetHeight / 2;
@@ -90,6 +88,7 @@ const checkDotCollision = () => {
             counter++;
             counterDisplay.textContent = `Score: ${counter}`;
             updateDotCounter();
+            playDotSound(); // Play the sound when a dot is grabbed
         }
     });
 };
@@ -97,6 +96,11 @@ const checkDotCollision = () => {
 const updateDotCounter = () => {
     const currentDots = document.querySelectorAll('.dot').length;
     dotCounterDisplay.textContent = `Dots: ${currentDots}/${maxDots}`;
+};
+
+const playDotSound = () => {
+    const dotSound = new Audio('/midia/pop.mp3');
+    dotSound.play();
 };
 
 setInterval(createDot, 1);
@@ -111,7 +115,7 @@ joystick.addEventListener('touchstart', (e) => {
 joystick.addEventListener('touchmove', (e) => {
     if (joystickActive) {
         e.preventDefault();
-        const touch = e.touches;
+        const touch = e.touches[0];
         dx = touch.clientX - joystickCenterX;
         dy = touch.clientY - joystickCenterY;
 
