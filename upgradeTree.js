@@ -14,8 +14,11 @@ class UpgradeTree {
 
     upgrades.forEach(upgrade => {
       if (upgrade.linkTo) {
-        const parent = map.get(upgrade.linkTo);
+        const parentNames = upgrade.linkTo.split(',').map(name => name.trim());
+        parentNames.forEach(parentName => {
+          const parent = map.get(parentName);
         if (parent) parent.children.push(upgrade);
+        });
       }
     });
 
@@ -62,7 +65,6 @@ class UpgradeTree {
     const treeContainers = document.createElement('tree-containers');
     this.container.appendChild(treeContainers);
 
-
     this.upgrades.forEach(upgrade => {
       const layer = upgrade.layer;
       if (!levelContainers[layer]) {
@@ -71,6 +73,7 @@ class UpgradeTree {
         treeContainers.appendChild(levelContainers[layer]);
       }
     });
+    
     this.upgrades.forEach(upgrade => {
       const layer = upgrade.layer || 0;
       const levelContainer = levelContainers[layer];
@@ -80,7 +83,6 @@ class UpgradeTree {
         levelContainer.appendChild(upgradeElement);
       }
     });
-
   }
 
   renderConnections() {
@@ -91,9 +93,9 @@ class UpgradeTree {
     });
   }
 
-  drawConnection(parentId, childId) {
-    const parentElement = this.container.querySelector(`.upgrade[data-name='${parentId}']`);
-    const childElement = this.container.querySelector(`.upgrade[data-name='${childId}']`);
+  drawConnection(parentName, childName) {
+    const parentElement = this.container.querySelector(`.upgrade[data-name='${parentName}']`);
+    const childElement = this.container.querySelector(`.upgrade[data-name='${childName}']`);
 
     if (!parentElement || !childElement) return;
 
