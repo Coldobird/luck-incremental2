@@ -1,12 +1,10 @@
-// main.js
-
-const gameScreen = document.getElementById('game-screen');
-const player = document.getElementById('player');
-const joystick = document.getElementById('joystick');
-const joystickContainer = document.getElementById('joystick-container');
-const counterDisplay = document.getElementById('counter');
-const dotCounterDisplay = document.getElementById('dot-counter');
-const upgradeButton = document.getElementById('upgrade-button');
+const gameScreen = document.querySelector('game-screen');
+const player = document.querySelector('player-element');
+const joystick = document.querySelector('joystick');
+const joystickContainer = document.querySelector('joystick-container');
+const counterDisplay = document.querySelector('score-counter');
+const dotCounterDisplay = document.querySelector('dot-counter');
+const upgradeButton = document.querySelector('btn-upgrade-max-dots');
 
 const keys = {};
 let playerX = gameScreen.offsetWidth / 2 - player.offsetWidth / 2;
@@ -18,7 +16,7 @@ let dx = 0;
 let dy = 0;
 const joystickRadius = joystickContainer.offsetWidth / 2 - joystick.offsetWidth / 2;
 let counter = 0;
-let maxDots = 500;
+let maxDots = 1000;
 
 // Functions related to the game
 const updateJoystickCenter = () => {
@@ -27,7 +25,7 @@ const updateJoystickCenter = () => {
     joystickCenterY = joystickContainerRect.top + joystickContainerRect.height / 2;
 };
 
-const gameContainerInner = document.getElementById('game-container-inner');
+const gameContainerInner = document.querySelector('game-container-inner');
 const playableArea = gameContainerInner;
 
 const movePlayer = () => {
@@ -49,7 +47,7 @@ const movePlayer = () => {
         playerX += 2;
     }
 
-    const playerRadius = player.clientWidth / 2
+    const playerRadius = player.clientWidth / 2;
     playerX = Math.max(playerRadius, Math.min(playerX, playableArea.clientWidth - playerRadius));
     playerY = Math.max(playerRadius, Math.min(playerY, playableArea.clientHeight - playerRadius));
     player.style.left = `${playerX}px`;
@@ -67,10 +65,11 @@ const createDot = () => {
         dot.className = 'dot';
         playableArea.appendChild(dot);
 
-        const spawnableArea = playableArea.clientWidth - dot.clientWidth
-        const dotRadius = dot.clientWidth / 2
-        dot.style.left = `${Math.random() * spawnableArea}px`;
-        dot.style.top = `${Math.random() * spawnableArea}px`;
+        const spawnableWidth = playableArea.clientWidth - dot.clientWidth;
+        const spawnableHeight = playableArea.clientHeight - dot.clientHeight;
+        const dotRadius = dot.clientWidth / 2;
+        dot.style.left = `${Math.random() * spawnableWidth}px`;
+        dot.style.top = `${Math.random() * spawnableHeight}px`;
         updateDotCounter();
     }
 };
@@ -112,7 +111,7 @@ joystick.addEventListener('touchstart', (e) => {
 joystick.addEventListener('touchmove', (e) => {
     if (joystickActive) {
         e.preventDefault();
-        const touch = e.touches[0];
+        const touch = e.touches;
         dx = touch.clientX - joystickCenterX;
         dy = touch.clientY - joystickCenterY;
 
@@ -139,10 +138,15 @@ joystick.addEventListener('touchend', (e) => {
 });
 
 // Button Event Handlers
-upgradeButton.addEventListener('click', () => {
+const goToUpgrades = () => {
     gameScreen.classList.add('hidden');
-    document.getElementById('upgrade-screen').classList.remove('hidden');
-});
+    document.querySelector('upgrade-screen').classList.remove('hidden');
+};
+
+const goToMain = () => {
+    document.querySelector('upgrade-screen').classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+};
 
 // Keyboard Event Handlers
 const handleKeyDown = (e) => {

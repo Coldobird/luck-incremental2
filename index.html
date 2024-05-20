@@ -3,37 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="mobile-style.css">
-    <title>Incremental Game</title>
 </head>
 <body>
-    <!-- Main Game Screen -->
-    <always-on-screen>
-        <div id="counter">Score: 0</div>
-        <div id="dot-counter">Dots: 0/5</div>
-    </always-on-screen>
+    <game-screen class="screen">
+        <always-on-screen>
+            <score-counter>Score: 0</score-counter>
+            <dot-counter></dot-counter>
+        </always-on-screen>
+        <game-container>
+            <game-container-inner>
+                <player-element></player-element>
+            </game-container-inner>
+        </game-container>
+        <joystick-container>
+            <joystick></joystick>
+        </joystick-container>
+        <button class="nav-button" onclick="goToUpgrades()">Upgrade</button>
+    </game-screen>
+    <upgrade-screen class="screen hidden">
+        <button class="nav-button" onclick="upgradeMaxDots()">Upgrade Max Dots</button>
+        <button class="nav-button" onclick="goToMain()">Back</button>
+    </upgrade-screen>
 
-    <div id="game-screen" class="screen">
-        <div id="game-container">
-            <div id="game-container-inner">
-                <div id="player"></div>
-            </div>
-        </div>
-        <div id="joystick-container">
-            <div id="joystick"></div>
-        </div>
-        <button id="upgrade-button" class="nav-button">Upgrade</button>
-    </div>
-
-    <!-- Upgrade Screen -->
-    <div id="upgrade-screen" class="screen hidden">
-        <h2>Upgrades</h2>
-        <div>
-            <button id="upgrade-max-dots">Increase Max Dots</button>
-        </div>
-        <button id="back-to-game" class="nav-button">Back to Game</button>
-    </div>
+    <audio id="dot-sound" src="grab-dot-sound.mp3"></audio>
 
     <script src="main.js"></script>
     <script src="upgrade.js"></script>

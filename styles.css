@@ -7,7 +7,8 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: #121212; /* Dark mode background */
+    color: #ffffff; /* Light text for dark mode */
 }
 
 .screen {
@@ -22,19 +23,19 @@ body, html {
     align-items: center;
 }
 
-#game-container {
+game-container {
     position: relative;
     width: 90vmin;
     height: 90vmin;
     max-width: 768px;
     max-height: 768px;
-    background-color: #ffffff;
-    border: 1px solid #000;
+    background-color: #1e1e1e; /* Dark mode container */
+    border: 1px solid #ffffff; /* Light border for dark mode */
     overflow: hidden;
     box-sizing: border-box;
 }
 
-#game-container-inner {
+game-container-inner {
     position: absolute;
     top: 0;
     left: 0;
@@ -42,7 +43,7 @@ body, html {
     height: 100%;
 }
 
-#player {
+player-element {
     position: absolute;
     width: 2.6%;
     height: 2.6%;
@@ -59,12 +60,14 @@ always-on-screen {
     top: 0;
     left: 0;
     width: 100%;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-around;
     padding: 10px;
     box-sizing: border-box;
 }
 
-#counter, #dot-counter {
+score-counter, dot-counter {
     font-size: 24px;
     font-weight: bold;
 }
@@ -77,10 +80,9 @@ always-on-screen {
     border-radius: 50%;
 }
 
-/* Upgrade Screen Styles */
-#upgrade-screen {
-    z-index: 1; /* Ensure upgrade screen is on top */
-    background-color: #fff;
+upgrade-screen {
+    z-index: 1;
+    background-color: #1e1e1e; /* Dark mode background */
 }
 
 .hidden {
@@ -92,4 +94,8 @@ always-on-screen {
     padding: 1.3% 2.6%;
     font-size: 24px;
     min-height: 30px;
+    background-color: #333; /* Dark button background */
+    color: #fff; /* Light button text */
+    border: 1px solid #fff; /* Light button border */
+    cursor: pointer;
 }
