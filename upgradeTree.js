@@ -8,17 +8,18 @@ class UpgradeTree {
   createUpgradeMap(upgrades) {
     const map = new Map();
     upgrades.forEach(upgrade => {
-      map.set(upgrade.id, upgrade);
+      map.set(upgrade.name, upgrade);
       upgrade.children = [];
     });
 
     upgrades.forEach(upgrade => {
-      if (upgrade.dependencyId) {
-        const parent = map.get(upgrade.dependencyId);
+      if (upgrade.linkTo) {
+        const parent = map.get(upgrade.linkTo);
         if (parent) parent.children.push(upgrade);
       }
     });
 
+    console.log(map);
     return map;
   }
 
@@ -36,7 +37,7 @@ class UpgradeTree {
   createUpgradeElement(upgrade) {
     const upgradeElement = document.createElement('div');
     upgradeElement.className = 'upgrade';
-    upgradeElement.dataset.id = upgrade.id;
+    upgradeElement.dataset.name = upgrade.name;
 
     const upgradeName = document.createElement('div');
     upgradeName.className = 'upgrade-name';
@@ -51,7 +52,7 @@ class UpgradeTree {
     const upgradeButton = document.createElement('button');
     upgradeButton.className = 'upgrade-button';
     upgradeButton.textContent = 'Upgrade';
-    upgradeButton.addEventListener('click', () => this.handleUpgrade(upgrade.id));
+    upgradeButton.addEventListener('click', () => this.handleUpgrade(upgrade.name));
     upgradeElement.appendChild(upgradeButton);
 
     return upgradeElement;
@@ -64,16 +65,16 @@ class UpgradeTree {
 
 
     this.upgrades.forEach(upgrade => {
-      const dependencyId = upgrade.dependencyId || 0; // Use "root" for upgrades with no dependency
-      if (!levelContainers[dependencyId]) {
-        levelContainers[dependencyId] = document.createElement('level-container');
-        levelContainers[dependencyId].classList.add(`level-${dependencyId}`); // Add class based on dependencyId
-        treeContainers.appendChild(levelContainers[dependencyId]);
+      const layer = upgrade.layer;
+      if (!levelContainers[layer]) {
+        levelContainers[layer] = document.createElement('level-container');
+        levelContainers[layer].classList.add(`level-${layer}`); // Add class based on linkTo
+        treeContainers.appendChild(levelContainers[layer]);
       }
     });
     this.upgrades.forEach(upgrade => {
-      const dependencyId = upgrade.dependencyId || 0;
-      const levelContainer = levelContainers[dependencyId];
+      const layer = upgrade.layer || 0;
+      const levelContainer = levelContainers[layer];
 
       if (levelContainer) {
         const upgradeElement = this.createUpgradeElement(upgrade);
@@ -86,14 +87,14 @@ class UpgradeTree {
   renderConnections() {
     this.upgrades.forEach(upgrade => {
       upgrade.children.forEach(child => {
-        this.drawConnection(upgrade.id, child.id);
+        this.drawConnection(upgrade.name, child.name);
       });
     });
   }
 
   drawConnection(parentId, childId) {
-    const parentElement = this.container.querySelector(`.upgrade[data-id='${parentId}']`);
-    const childElement = this.container.querySelector(`.upgrade[data-id='${childId}']`);
+    const parentElement = this.container.querySelector(`.upgrade[data-name='${parentId}']`);
+    const childElement = this.container.querySelector(`.upgrade[data-name='${childId}']`);
     console.log(parentElement, childElement);
 
     if (!parentElement || !childElement) return;
@@ -128,10 +129,16 @@ class UpgradeTree {
 }
 
 const upgrades = [
-  { id: '1', name: 'Upgrade 1', upgrade: 'Effect 1', cost: 100, dependencyId: null },
-  { id: '2', name: 'Upgrade 2', upgrade: 'Effect 2', cost: 200, dependencyId: '1' },
-  { id: '3', name: 'Upgrade 3', upgrade: 'Effect 3', cost: 300, dependencyId: '1' },
-  { id: '4', name: 'Upgrade 4', upgrade: 'Effect 4', cost: 400, dependencyId: '2' },
+  { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
+
+  { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
+
+  { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
+  { name: 'Upgrade 1', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.25x spawnRate, 2x max' },
+  { name: 'Upgrade 2', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
+
+  { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
+  { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +.5 range' },
 ];
 
 const container = document.getElementById('upgrade-container');
