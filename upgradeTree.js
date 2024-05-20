@@ -19,7 +19,6 @@ class UpgradeTree {
       }
     });
 
-    console.log(map);
     return map;
   }
 
@@ -95,7 +94,6 @@ class UpgradeTree {
   drawConnection(parentId, childId) {
     const parentElement = this.container.querySelector(`.upgrade[data-name='${parentId}']`);
     const childElement = this.container.querySelector(`.upgrade[data-name='${childId}']`);
-    console.log(parentElement, childElement);
 
     if (!parentElement || !childElement) return;
 
@@ -139,6 +137,8 @@ const upgrades = [
 
   { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
   { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +.5 range' },
+  { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, Upgrade 2', upgrade: '2x max' },
+  { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: 'Upgrade 2', upgrade: '2x luck, 1.5x max' },
 ];
 
 const container = document.getElementById('upgrade-container');
