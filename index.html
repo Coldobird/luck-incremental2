@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <always-on-screen>
+        <score-counter>Score: 0</score-counter>
+        <dot-counter></dot-counter>
+    </always-on-screen>
     <game-screen class="screen">
-        <always-on-screen>
-            <score-counter>Score: 0</score-counter>
-            <dot-counter></dot-counter>
-        </always-on-screen>
         <game-container>
             <game-container-inner>
                 <player-element></player-element>
@@ -24,12 +24,13 @@
     </game-screen>
     <upgrade-screen class="screen hidden">
         <button class="nav-button" onclick="upgradeMaxDots()">Upgrade Max Dots</button>
+        <button class="nav-button" onclick="upgradeSpawnDelay(1000)">Upgrade Spawn Delay</button>
+        <spawn-delay-info>5000 -> 4000</spawn-delay-info>
+
         <button class="nav-button" onclick="goToMain()">Back</button>
     </upgrade-screen>
 
-    <audio id="dot-sound" src="/midia/pop.mp3"></audio>
-
-    <script src="main.js"></script>
     <script src="upgrade.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

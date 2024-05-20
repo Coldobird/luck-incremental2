@@ -65,6 +65,7 @@ always-on-screen {
     justify-content: space-around;
     padding: 10px;
     box-sizing: border-box;
+    z-index: 10;
 }
 
 score-counter, dot-counter {

@@ -14,7 +14,6 @@ let dx = 0;
 let dy = 0;
 const joystickRadius = joystickContainer.offsetWidth / 2 - joystick.offsetWidth / 2;
 let counter = 0;
-let maxDots = 1000;
 
 // Functions related to the game
 const updateJoystickCenter = () => {
@@ -103,7 +102,16 @@ const playDotSound = () => {
     dotSound.play();
 };
 
-setInterval(createDot, 1);
+
+let dotCreatingInterval;
+
+const startInterval = () => {
+    clearInterval(dotCreatingInterval);
+    console.log(spawnDelay);
+    dotCreatingInterval = setInterval(createDot, spawnDelay);
+}
+
+startInterval(createDot, spawnDelay);
 
 // Joystick Event Handlers
 joystick.addEventListener('touchstart', (e) => {
