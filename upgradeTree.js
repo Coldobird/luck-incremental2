@@ -27,30 +27,16 @@ class UpgradeTree {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
-    svg.style.position = "absolute";
-    svg.style.top = "0";
-    svg.style.left = "0";
-    svg.style.zIndex = "-1";
     container.appendChild(svg);
 
     this.renderUpgrades();
     this.renderConnections();
   }
 
-  renderUpgrades() {
-    this.upgrades.filter(upgrade => !upgrade.dependencyId).forEach((upgrade, index) => {
-      const upgradeElement = this.createUpgradeElement(upgrade, index);
-      this.container.appendChild(upgradeElement);
-    });
-  }
-
-  createUpgradeElement(upgrade, index) {
+  createUpgradeElement(upgrade) {
     const upgradeElement = document.createElement('div');
     upgradeElement.className = 'upgrade';
     upgradeElement.dataset.id = upgrade.id;
-    upgradeElement.style.position = 'absolute';
-    upgradeElement.style.left = `${index * 150}px`; // Position upgrades with some spacing
-    upgradeElement.style.top = `${index * 100}px`;
 
     const upgradeName = document.createElement('div');
     upgradeName.className = 'upgrade-name';
@@ -71,6 +57,32 @@ class UpgradeTree {
     return upgradeElement;
   }
 
+  renderUpgrades() {
+    const levelContainers = {};
+    const treeContainers = document.createElement('tree-containers');
+    this.container.appendChild(treeContainers);
+
+
+    this.upgrades.forEach(upgrade => {
+      const dependencyId = upgrade.dependencyId || 0; // Use "root" for upgrades with no dependency
+      if (!levelContainers[dependencyId]) {
+        levelContainers[dependencyId] = document.createElement('level-container');
+        levelContainers[dependencyId].classList.add(`level-${dependencyId}`); // Add class based on dependencyId
+        treeContainers.appendChild(levelContainers[dependencyId]);
+      }
+    });
+    this.upgrades.forEach(upgrade => {
+      const dependencyId = upgrade.dependencyId || 0;
+      const levelContainer = levelContainers[dependencyId];
+
+      if (levelContainer) {
+        const upgradeElement = this.createUpgradeElement(upgrade);
+        levelContainer.appendChild(upgradeElement);
+      }
+    });
+
+  }
+
   renderConnections() {
     this.upgrades.forEach(upgrade => {
       upgrade.children.forEach(child => {
@@ -82,6 +94,7 @@ class UpgradeTree {
   drawConnection(parentId, childId) {
     const parentElement = this.container.querySelector(`.upgrade[data-id='${parentId}']`);
     const childElement = this.container.querySelector(`.upgrade[data-id='${childId}']`);
+    console.log(parentElement, childElement);
 
     if (!parentElement || !childElement) return;
 
@@ -95,7 +108,6 @@ class UpgradeTree {
     const childY = childRect.top + childRect.height / 2 - containerRect.top;
 
     const svg = this.container.querySelector('svg');
-    if (!svg) return;
 
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", parentX);
@@ -115,7 +127,6 @@ class UpgradeTree {
   }
 }
 
-// Example usage
 const upgrades = [
   { id: '1', name: 'Upgrade 1', upgrade: 'Effect 1', cost: 100, dependencyId: null },
   { id: '2', name: 'Upgrade 2', upgrade: 'Effect 2', cost: 200, dependencyId: '1' },
@@ -127,7 +138,6 @@ const container = document.getElementById('upgrade-container');
 const upgradeTree = new UpgradeTree(upgrades);
 upgradeTree.displayUpgradeTree(container);
 
-// Example function to handle the upgrade button click
 function handleUpgrade(upgradeId) {
   upgradeTree.handleUpgrade(upgradeId);
 }
