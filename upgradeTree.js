@@ -125,7 +125,27 @@ class UpgradeTree {
     const upgrade = this.upgradeMap.get(upgradeId);
     if (upgrade) {
       console.log(`Upgrading: ${upgrade.name}`);
+      this.applyUpgrade(upgrade);
     }
+  }
+
+  applyUpgrade(upgrade) {
+    const upgradeEffects = upgrade.upgrade.split(',').map(effect => effect.trim());
+
+    upgradeEffects.forEach(effect => {
+      const [key, value] = effect.split(' ').map(part => part.trim());
+      const multiplier = parseFloat(key.slice(0, -1));
+
+      if (value in gameState) {
+        gameState[value] *= multiplier;
+      }
+
+      if (value == 'spawnRate') {
+        startInterval()
+      }
+    });
+
+    console.log('Updated game state:', gameState);
   }
 
   removeUpgradeTree() {
@@ -137,18 +157,23 @@ class UpgradeTree {
   }
 }
 
+// Example usage
 const upgrades = [
   { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
   { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
   { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
   { name: 'Upgrade 1', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.25x spawnRate, 2x max' },
-  { name: 'Upgrade 2', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
+  { name: '1.5x spawnRate', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
   { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
   { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +.5 range' },
-  { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, Upgrade 2', upgrade: '2x max' },
-  { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: 'Upgrade 2', upgrade: '2x luck, 1.5x max' },
+  { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, 1.5x spawnRate', upgrade: '2x max' },
+  { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: '1.5x spawnRate', upgrade: '2x luck, 1.5x max' },
+
+  { name: '+ luck', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x luck' },
+  { name: '+ max', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x max' },
+  { name: '+ playerSpeed', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x playerSpeed' },
+  { name: '+ spawnRate', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x spawnRate' },
 ];
 
 const container = document.getElementById('upgrade-container');
 const upgradeTree = new UpgradeTree(upgrades);
-

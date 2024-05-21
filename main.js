@@ -15,7 +15,6 @@ let dy = 0;
 const joystickRadius = joystickContainer.offsetWidth / 2 - joystick.offsetWidth / 2;
 let counter = 0;
 
-// Functions related to the game
 const updateJoystickCenter = () => {
   const joystickContainerRect = joystickContainer.getBoundingClientRect();
   joystickCenterX = joystickContainerRect.left + joystickContainerRect.width / 2;
@@ -26,22 +25,24 @@ const gameContainerInner = document.querySelector('game-container-inner');
 const playableArea = gameContainerInner;
 
 const movePlayer = () => {
+  const speedMultiplier = gameState.playerSpeed;
+
   if (joystickActive) {
-    playerX += dx * 0.1;
-    playerY += dy * 0.1;
+    playerX += dx * 0.1 * speedMultiplier;
+    playerY += dy * 0.1 * speedMultiplier;
   }
 
   if (keys['w'] || keys['arrowup']) {
-    playerY -= 2;
+    playerY -= 2 * speedMultiplier;
   }
   if (keys['s'] || keys['arrowdown']) {
-    playerY += 2;
+    playerY += 2 * speedMultiplier;
   }
   if (keys['a'] || keys['arrowleft']) {
-    playerX -= 2;
+    playerX -= 2 * speedMultiplier;
   }
   if (keys['d'] || keys['arrowright']) {
-    playerX += 2;
+    playerX += 2 * speedMultiplier;
   }
 
   const playerRadius = player.clientWidth / 2;
@@ -57,7 +58,7 @@ const movePlayer = () => {
 
 const createDot = () => {
   const currentDots = document.querySelectorAll('.dot').length;
-  if (currentDots < maxDots) {
+  if (currentDots < gameState.max) {
     const dot = document.createElement('div');
     dot.className = 'dot';
     playableArea.appendChild(dot);
@@ -87,14 +88,14 @@ const checkDotCollision = () => {
       counter++;
       counterDisplay.textContent = `Score: ${counter}`;
       updateDotCounter();
-      playDotSound(); // Play the sound when a dot is grabbed
+      playDotSound();
     }
   });
 };
 
 const updateDotCounter = () => {
   const currentDots = document.querySelectorAll('.dot').length;
-  dotCounterDisplay.textContent = `Dots: ${currentDots}/${maxDots}`;
+  dotCounterDisplay.textContent = `Dots: ${currentDots}/${gameState.max}`;
 };
 
 const playDotSound = () => {
@@ -102,17 +103,16 @@ const playDotSound = () => {
   dotSound.play();
 };
 
-
 let dotCreatingInterval;
 
 const startInterval = () => {
   clearInterval(dotCreatingInterval);
+  const spawnDelay = 1000 / gameState.spawnRate;
   dotCreatingInterval = setInterval(createDot, spawnDelay);
 }
 
-startInterval(createDot, spawnDelay);
+startInterval(createDot, 1000 / gameState.spawnRate);
 
-// Joystick Event Handlers
 joystick.addEventListener('touchstart', (e) => {
   e.preventDefault();
   joystickActive = true;
@@ -126,10 +126,8 @@ joystick.addEventListener('touchmove', (e) => {
     dx = touch.clientX - joystickCenterX;
     dy = touch.clientY - joystickCenterY;
 
-    // Calculate the distance from the center
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // Constrain the joystick within the outer circle
     if (distance > joystickRadius) {
       const angle = Math.atan2(dy, dx);
       dx = joystickRadius * Math.cos(angle);
@@ -147,7 +145,6 @@ joystick.addEventListener('touchend', (e) => {
   dy = 0;
   joystick.style.transform = 'translate(0, 0)';
 });
-
 
 const goToUpgrades = () => {
   gameScreen.classList.add('hidden');
@@ -173,12 +170,9 @@ const handleKeyUp = (e) => {
 document.addEventListener('keydown', handleKeyDown);
 document.addEventListener('keyup', handleKeyUp);
 
-// Start the animation loop
 requestAnimationFrame(movePlayer);
 
-// Ensure the player starts at the center
 player.style.left = `${playerX}px`;
 player.style.top = `${playerY}px`;
 
-// Update the dot counter at the start
 updateDotCounter();
