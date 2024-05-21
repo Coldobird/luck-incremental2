@@ -98,9 +98,16 @@ const updateDotCounter = () => {
   dotCounterDisplay.textContent = `Dots: ${currentDots}/${gameState.max}`;
 };
 
+let canPlaySound = true
+
 const playDotSound = () => {
-  const dotSound = new Audio('/midia/pop.mp3');
-  dotSound.play();
+  if (canPlaySound) {
+    console.log('entrou');
+    canPlaySound = false
+    const dotSound = new Audio('/midia/pop.mp3');
+    dotSound.play();
+    setTimeout(() => canPlaySound = true, 10);
+  }
 };
 
 let dotCreatingInterval;
@@ -146,15 +153,16 @@ joystick.addEventListener('touchend', (e) => {
   joystick.style.transform = 'translate(0, 0)';
 });
 
+const upgradeScreen = document.querySelector('upgrade-screen');
 const goToUpgrades = () => {
   gameScreen.classList.add('hidden');
-  document.querySelector('upgrade-screen').classList.remove('hidden');
+  upgradeScreen.classList.remove('hidden');
   upgradeTree.displayUpgradeTree(container);
 };
 
 const goToMain = () => {
   upgradeTree.removeUpgradeTree();
-  document.querySelector('upgrade-screen').classList.add('hidden');
+  upgradeScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
 };
 
