@@ -1,5 +1,4 @@
 // upgrade.js
-// Upgrade Screen Variables
 const spawnDelayInfo = document.querySelector('spawn-delay-info')
 let maxDots = 1000;
 let spawnDelay = 5000

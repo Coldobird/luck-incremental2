@@ -1,3 +1,4 @@
+//main.js
 const gameScreen = document.querySelector('game-screen');
 const player = document.querySelector('player-element');
 const joystick = document.querySelector('joystick');

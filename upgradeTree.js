@@ -1,3 +1,4 @@
+//upgradeTree.js
 class UpgradeTree {
   constructor(upgrades) {
     this.upgrades = upgrades;
