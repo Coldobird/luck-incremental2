@@ -1,38 +1,51 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Lucky Incremental</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incremental Game</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+
+    #joystick-container {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 100px;
+      height: 100px;
+      border: 2px solid black;
+      border-radius: 50%;
+    }
+
+    #joystick {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: gray;
+      border-radius: 50%;
+      transform: translate(30px, 30px);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
-    <always-on-screen>
-        <score-counter>Score: 0</score-counter>
-        <dot-counter></dot-counter>
-    </always-on-screen>
+  <div id="game-screen">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="score-counter">Score: 0</div>
+    <div id="dot-counter">Dots: 0/10</div>
+  </div>
+  <div id="upgrade-screen" class="hidden"></div>
 
-    <game-screen class="screen">
-        <game-container>
-            <game-container-inner>
-                <player-element></player-element>
-            </game-container-inner>
-        </game-container>
-        <joystick-container>
-            <joystick></joystick>
-        </joystick-container>
-        <button class="nav-button" onclick="goToUpgrades()">Upgrade</button>
-    </game-screen>
-
-    <upgrade-screen class="screen hidden">
-        <div id="upgrade-container"></div>
-        <button class="nav-button" onclick="goToMain()">Back</button>
-    </upgrade-screen>
-
-    
-    <script src="upgrade.js"></script>
-    <script src="upgradeTree.js"></script>
-    <script src="main.js"></script>
+  <!-- <script type="module" src="main.js"></script> -->
+  <!-- <script type="module" src="joystick-controlls.js"></script> -->
+  <script type="module" src="game-loop.js"></script>
 </body>
+
 </html>

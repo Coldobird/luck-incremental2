@@ -1,26 +1,37 @@
-import { setupJoystickControls, updateJoystick } from './joystick-controlls.js';
-
-const gameScreen = document.querySelector('#game-screen');
-const player = document.createElement('player-element');
-const counterDisplay = document.querySelector('#score-counter');
-const dotCounterDisplay = document.querySelector('#dot-counter');
+//main.js
+const gameScreen = document.querySelector('game-screen');
+const player = document.querySelector('player-element');
+const joystick = document.querySelector('joystick');
+const joystickContainer = document.querySelector('joystick-container');
+const counterDisplay = document.querySelector('score-counter');
+const dotCounterDisplay = document.querySelector('dot-counter');
 const keys = {};
 let playerX = gameScreen.offsetWidth / 2 - player.offsetWidth / 2;
 let playerY = gameScreen.offsetHeight / 2 - player.offsetHeight / 2;
+let joystickCenterX = 0;
+let joystickCenterY = 0;
+let joystickActive = false;
+let dx = 0;
+let dy = 0;
+const joystickRadius = joystickContainer.offsetWidth / 2 - joystick.offsetWidth / 2;
+let counter = 0;
 
-const gameState = {
-  playerSpeed: 1,
-  max: 10,
-  spawnRate: 1,
+const updateJoystickCenter = () => {
+  const joystickContainerRect = joystickContainer.getBoundingClientRect();
+  joystickCenterX = joystickContainerRect.left + joystickContainerRect.width / 2;
+  joystickCenterY = joystickContainerRect.top + joystickContainerRect.height / 2;
 };
 
-const gameContainerInner = document.createElement('game-container-inner');
+const gameContainerInner = document.querySelector('game-container-inner');
 const playableArea = gameContainerInner;
 
 const movePlayer = () => {
   const speedMultiplier = gameState.playerSpeed;
 
-  updateJoystick();
+  if (joystickActive) {
+    playerX += dx * 0.1 * speedMultiplier;
+    playerY += dy * 0.1 * speedMultiplier;
+  }
 
   if (keys['w'] || keys['arrowup']) {
     playerY -= 2 * speedMultiplier;
@@ -88,11 +99,12 @@ const updateDotCounter = () => {
   dotCounterDisplay.textContent = `Dots: ${currentDots}/${gameState.max}`;
 };
 
-let canPlaySound = true;
+let canPlaySound = true
 
 const playDotSound = () => {
   if (canPlaySound) {
-    canPlaySound = false;
+    console.log('entrou');
+    canPlaySound = false
     const dotSound = new Audio('/midia/pop.mp3');
     dotSound.play();
     setTimeout(() => canPlaySound = true, 10);
@@ -105,19 +117,67 @@ const startInterval = () => {
   clearInterval(dotCreatingInterval);
   const spawnDelay = 1000 / gameState.spawnRate;
   dotCreatingInterval = setInterval(createDot, spawnDelay);
+}
+
+startInterval(createDot, 1000 / gameState.spawnRate);
+
+joystick.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  joystickActive = true;
+  updateJoystickCenter();
+});
+
+joystick.addEventListener('touchmove', (e) => {
+  if (joystickActive) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    dx = touch.clientX - joystickCenterX;
+    dy = touch.clientY - joystickCenterY;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > joystickRadius) {
+      const angle = Math.atan2(dy, dx);
+      dx = joystickRadius * Math.cos(angle);
+      dy = joystickRadius * Math.sin(angle);
+    }
+
+    joystick.style.transform = `translate(${dx}px, ${dy}px)`;
+  }
+});
+
+joystick.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  joystickActive = false;
+  dx = 0;
+  dy = 0;
+  joystick.style.transform = 'translate(0, 0)';
+});
+
+const upgradeScreen = document.querySelector('upgrade-screen');
+const goToUpgrades = () => {
+  gameScreen.classList.add('hidden');
+  upgradeScreen.classList.remove('hidden');
+  upgradeTree.displayUpgradeTree(container);
 };
 
-startInterval();
+const goToMain = () => {
+  upgradeTree.removeUpgradeTree();
+  upgradeScreen.classList.add('hidden');
+  gameScreen.classList.remove('hidden');
+};
 
-document.addEventListener('keydown', (e) => {
+// Keyboard Event Handlers
+const handleKeyDown = (e) => {
   keys[e.key.toLowerCase()] = true;
-});
+};
 
-document.addEventListener('keyup', (e) => {
+const handleKeyUp = (e) => {
   keys[e.key.toLowerCase()] = false;
-});
+};
 
-setupJoystickControls();
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
 
 requestAnimationFrame(movePlayer);
 
