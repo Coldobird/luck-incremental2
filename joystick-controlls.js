@@ -8,12 +8,19 @@ export class Joystick {
     this.dx = 0;
     this.dy = 0;
     this.joystickRadius = 0;
+    this.joystickContainerRect
+    this.joysticknubRect
+    this.joystickOffset
+  }
+
+  setJoystickOffset() {
+    this.joystickOffset = this.joystickContainerRect.width / 2 - this.joysticknubRect.width / 2
   }
 
   updateJoystickCenter() {
-    const joystickContainerRect = this.joystickContainer.getBoundingClientRect();
-    this.joystickCenterX = joystickContainerRect.left + joystickContainerRect.width / 2;
-    this.joystickCenterY = joystickContainerRect.top + joystickContainerRect.height / 2;
+    this.joystickContainerRect = this.joystickContainer.getBoundingClientRect();
+    this.joystickCenterX = this.joystickContainerRect.left + this.joystickContainerRect.width / 2;
+    this.joystickCenterY = this.joystickContainerRect.top + this.joystickContainerRect.height / 2;
   }
 
   updateJoystick(player) {
@@ -29,6 +36,10 @@ export class Joystick {
 
     this.joystick = document.createElement('joystick-nub');
     this.joystickContainer.appendChild(this.joystick);
+
+    this.joystickContainerRect = this.joystickContainer.getBoundingClientRect();
+    this.joysticknubRect = this.joystick.getBoundingClientRect();
+    this.setJoystickOffset()
 
     this.joystickRadius = this.joystickContainer.offsetWidth / 2 - this.joystick.offsetWidth / 2;
 
@@ -47,14 +58,14 @@ export class Joystick {
         
         const distance = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
         
-        console.log(this.joystickCenterX);
         if (distance > this.joystickRadius) {
           const angle = Math.atan2(this.dy, this.dx);
           this.dx = this.joystickRadius * Math.cos(angle);
           this.dy = this.joystickRadius * Math.sin(angle);
         }
 
-        this.joystick.style.transform = `translate(${this.dx}px, ${this.dy}px)`;
+        console.log(this.joystickOffset);
+        this.joystick.style.transform = `translate(${this.dx + this.joystickOffset}px, ${this.dy + this.joystickOffset}px)`;
       }
     });
 
