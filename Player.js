@@ -1,12 +1,9 @@
-import { updateJoystick } from "./joystick-controlls.js";
-
-const keys = {};
-
 export class Player {
-  constructor({ canvas, ctx, dot }) {
+  constructor({ canvas, ctx, dot, joystick }) {
     this.canvas = canvas
     this.ctx = ctx
     this.dot = dot
+    this.joystick = joystick
 
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height / 2;
@@ -15,22 +12,24 @@ export class Player {
     this.color = 'blue';
     this.speed = 5;
 
+    this.keys = {};
+
     window.addEventListener('keydown', (e) => {
-      keys[e.key] = true;
+      this.keys[e.key] = true;
     });
 
     window.addEventListener('keyup', (e) => {
-      keys[e.key] = false;
+      this.keys[e.key] = false;
     });
   }
 
   update() {
-    if (keys['ArrowUp']) this.y -= this.speed;
-    if (keys['ArrowDown']) this.y += this.speed;
-    if (keys['ArrowLeft']) this.x -= this.speed;
-    if (keys['ArrowRight']) this.x += this.speed;
+    if (this.keys['ArrowUp']) this.y -= this.speed;
+    if (this.keys['ArrowDown']) this.y += this.speed;
+    if (this.keys['ArrowLeft']) this.x -= this.speed;
+    if (this.keys['ArrowRight']) this.x += this.speed;
 
-    updateJoystick()
+    this.joystick.updateJoystick(this)
 
     // Prevent player from moving out of bounds
     this.x = Math.max(0, Math.min(this.canvas.width - this.width, this.x));

@@ -1,66 +1,72 @@
-let joystick, joystickContainer;
-let joystickCenterX = 0;
-let joystickCenterY = 0;
-let joystickActive = false;
-let dx = 0;
-let dy = 0;
-let joystickRadius;
+export class Joystick {
+  constructor({ }) {
+    this.joystick = null;
+    this.joystickContainer = null;
+    this.joystickCenterX = 0;
+    this.joystickCenterY = 0;
+    this.joystickActive = false;
+    this.dx = 0;
+    this.dy = 0;
+    this.joystickRadius = 0;
 
-const updateJoystickCenter = () => {
-  const joystickContainerRect = joystickContainer.getBoundingClientRect();
-  joystickCenterX = joystickContainerRect.left + joystickContainerRect.width;
-  joystickCenterY = joystickContainerRect.top + joystickContainerRect.height;
-};
-
-export const updateJoystick = () => {
-  if (joystickActive) {
-    player.x += dx * 0.1 * player.speed;
-    player.y += dy * 0.1 * player.speed;
+    this.setupJoystickControls();
   }
-};
 
-export const setupJoystickControls = () => {
-  joystickContainer = document.createElement('div');
-  joystickContainer.id = 'joystick-container';
-  document.body.appendChild(joystickContainer);
+  updateJoystickCenter() {
+    const joystickContainerRect = this.joystickContainer.getBoundingClientRect();
+    this.joystickCenterX = joystickContainerRect.left + joystickContainerRect.width / 2;
+    this.joystickCenterY = joystickContainerRect.top + joystickContainerRect.height / 2;
+  }
 
-  joystick = document.createElement('div');
-  joystick.id = 'joystick';
-  joystickContainer.appendChild(joystick);
-
-  joystickRadius = joystickContainer.offsetWidth / 2 - joystick.offsetWidth / 2;
-
-  joystick.addEventListener('touchstart', (e) => {
-    console.log('oioioi');
-    e.preventDefault();
-    joystickActive = true;
-    updateJoystickCenter();
-  });
-
-  joystick.addEventListener('touchmove', (e) => {
-    if (joystickActive) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      dx = touch.clientX - joystickCenterX;
-      dy = touch.clientY - joystickCenterY;
-
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance > joystickRadius) {
-        const angle = Math.atan2(dy, dx);
-        dx = joystickRadius * Math.cos(angle);
-        dy = joystickRadius * Math.sin(angle);
-      }
-
-      joystick.style.transform = `translate(${dx}px, ${dy}px)`;
+  updateJoystick(player) {
+    if (this.joystickActive) {
+      player.x += this.dx * 0.1 * player.speed;
+      player.y += this.dy * 0.1 * player.speed;
     }
-  });
+  }
 
-  joystick.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    joystickActive = false;
-    dx = 0;
-    dy = 0;
-    joystick.style.transform = 'translate(0, 0)';
-  });
-};
+  setupJoystickControls() {
+    this.joystickContainer = document.createElement('div');
+    this.joystickContainer.id = 'joystick-container';
+    document.body.appendChild(this.joystickContainer);
+
+    this.joystick = document.createElement('div');
+    this.joystick.id = 'joystick';
+    this.joystickContainer.appendChild(this.joystick);
+
+    this.joystickRadius = this.joystickContainer.offsetWidth / 2 - this.joystick.offsetWidth / 2;
+
+    this.joystick.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      this.joystickActive = true;
+      this.updateJoystickCenter();
+    });
+
+    this.joystick.addEventListener('touchmove', (e) => {
+      if (this.joystickActive) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        this.dx = touch.clientX - this.joystickCenterX;
+        this.dy = touch.clientY - this.joystickCenterY;
+
+        const distance = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+
+        if (distance > this.joystickRadius) {
+          const angle = Math.atan2(this.dy, this.dx);
+          this.dx = this.joystickRadius * Math.cos(angle);
+          this.dy = this.joystickRadius * Math.sin(angle);
+        }
+
+        this.joystick.style.transform = `translate(${this.dx}px, ${this.dy}px)`;
+      }
+    });
+
+    this.joystick.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      this.joystickActive = false;
+      this.dx = 0;
+      this.dy = 0;
+      this.joystick.style.transform = 'translate(0, 0)';
+    });
+  }
+}
