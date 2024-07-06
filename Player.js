@@ -10,9 +10,13 @@ export class Player {
     this.width = 20;
     this.height = 20;
     this.color = 'blue';
-    this.speed = 5;
+    this.speed = 2;
 
     this.keys = {};
+    this.upKeys = ['ArrowUp', 'w'];
+    this.downKeys = ['ArrowDown', 's'];
+    this.leftKeys = ['ArrowLeft', 'a'];
+    this.rightKeys = ['ArrowRight', 'd'];
 
     window.addEventListener('keydown', (e) => {
       this.keys[e.key] = true;
@@ -24,10 +28,10 @@ export class Player {
   }
 
   update() {
-    if (this.keys['ArrowUp']) this.y -= this.speed;
-    if (this.keys['ArrowDown']) this.y += this.speed;
-    if (this.keys['ArrowLeft']) this.x -= this.speed;
-    if (this.keys['ArrowRight']) this.x += this.speed;
+    if (this.upKeys.some(key => this.keys[key])) this.y -= this.speed;
+    if (this.downKeys.some(key => this.keys[key])) this.y += this.speed
+    if (this.leftKeys.some(key => this.keys[key])) this.x -= this.speed;
+    if (this.rightKeys.some(key => this.keys[key])) this.x += this.speed;
 
     this.joystick.updateJoystick(this)
 
