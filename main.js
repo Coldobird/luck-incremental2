@@ -1,4 +1,4 @@
-import { setupJoystickControls, updateJoystick } from './joystick-controlls.js';
+import { updateJoystick } from './joystick-controlls.js';
 
 const gameScreen = document.querySelector('#game-screen');
 const player = document.createElement('player-element');
@@ -116,8 +116,6 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
-
-setupJoystickControls();
 
 requestAnimationFrame(movePlayer);
 

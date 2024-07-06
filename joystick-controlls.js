@@ -1,5 +1,5 @@
 export class Joystick {
-  constructor({ }) {
+  constructor() {
     this.joystick = null;
     this.joystickContainer = null;
     this.joystickCenterX = 0;
@@ -8,8 +8,6 @@ export class Joystick {
     this.dx = 0;
     this.dy = 0;
     this.joystickRadius = 0;
-
-    this.setupJoystickControls();
   }
 
   updateJoystickCenter() {
@@ -26,12 +24,10 @@ export class Joystick {
   }
 
   setupJoystickControls() {
-    this.joystickContainer = document.createElement('div');
-    this.joystickContainer.id = 'joystick-container';
+    this.joystickContainer = document.createElement('joystick-container');
     document.body.appendChild(this.joystickContainer);
 
-    this.joystick = document.createElement('div');
-    this.joystick.id = 'joystick';
+    this.joystick = document.createElement('joystick-nub');
     this.joystickContainer.appendChild(this.joystick);
 
     this.joystickRadius = this.joystickContainer.offsetWidth / 2 - this.joystick.offsetWidth / 2;
@@ -48,9 +44,10 @@ export class Joystick {
         const touch = e.touches[0];
         this.dx = touch.clientX - this.joystickCenterX;
         this.dy = touch.clientY - this.joystickCenterY;
-
+        
         const distance = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-
+        
+        console.log(this.joystickCenterX);
         if (distance > this.joystickRadius) {
           const angle = Math.atan2(this.dy, this.dx);
           this.dx = this.joystickRadius * Math.cos(angle);
@@ -66,7 +63,7 @@ export class Joystick {
       this.joystickActive = false;
       this.dx = 0;
       this.dy = 0;
-      this.joystick.style.transform = 'translate(0, 0)';
+      this.joystick.style.transform = 'translate(30px, 30px)';
     });
   }
 }
