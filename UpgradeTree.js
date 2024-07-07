@@ -1,17 +1,21 @@
 //upgradeTree.js
 const gameScreen = document.querySelector('game-screen');
 const upgradeScreen = document.querySelector('upgrade-screen');
-const button = document.querySelector('.nav-button');
+const upgradeButton = document.querySelector('.upgrade-button');
+const backButton = document.querySelector('.back-button');
 const container = document.getElementById('upgrade-container');
 
-button.addEventListener('click', () => {
+upgradeButton.addEventListener('click', () => {
   goToUpgrades()
+});
+
+backButton.addEventListener('click', () => {
+  goToMain()
 });
 
 const goToUpgrades = () => {
   gameScreen.classList.add('hidden');
   upgradeScreen.classList.remove('hidden');
-  console.log(container);
   upgradeTree.displayUpgradeTree(container);
 };
 
@@ -185,7 +189,7 @@ class UpgradeTree {
 
 const upgrades = [
   { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
-  
+
   { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
 
   { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
