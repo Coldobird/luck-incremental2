@@ -12,12 +12,6 @@ const player = new Player({ canvas, ctx, dots, joystick, stats });
 
 const isMobile = window.matchMedia("(pointer:none), (pointer:coarse)").matches;
 
-//////////////////////////////////////////////////////////////////////////////
-// On Load
-//
-if (isMobile) joystick.setupJoystickControls();
-stats.setupStats();
-
 const spawnDot = (numDots = 1) => {
   for (let i = 0; i < numDots; i++) {
     if (stats.dotAmout < stats.maxDots) {
@@ -29,6 +23,11 @@ const spawnDot = (numDots = 1) => {
   }
 };
 
+//////////////////////////////////////////////////////////////////////////////
+// On Load
+//
+if (isMobile) joystick.setupJoystickControls();
+stats.setupStats();
 setInterval(() => spawnDot(1), 1000);
 
 //////////////////////////////////////////////////////////////////////////////
