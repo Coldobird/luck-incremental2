@@ -5,46 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Incremental Game</title>
-  <style>
-    canvas {
-      border: 1px solid black;
-    }
-
-    joystick-container {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      width: 100px;
-      height: 100px;
-      outline: 2px solid black;
-      border-radius: 50%;
-    }
-
-    joystick-nub {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background: gray;
-      border-radius: 50%;
-      transform: translate(30px, 30px);
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="mobile-styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div id="game-screen">
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="score-counter">Score: 0</div>
-    <div id="dot-counter">Dots: 0/10</div>
-  </div>
+  <game-screen>
+    <canvas id="gameCanvas" width="786" height="786"></canvas>
+  </game-screen>
   <div id="upgrade-screen" class="hidden"></div>
 
-  <!-- <script type="module" src="main.js"></script> -->
-  <!-- <script type="module" src="joystick-controlls.js"></script> -->
   <script type="module" src="game-loop.js"></script>
 </body>
 

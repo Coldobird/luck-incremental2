@@ -30,6 +30,10 @@ export class Joystick {
     }
   }
 
+  centerNub() {
+    this.joystick.style.transform = `translate(${this.dx + this.joystickOffset}px, ${this.dy + this.joystickOffset}px)`;
+  }
+
   setupJoystickControls() {
     this.joystickContainer = document.createElement('joystick-container');
     document.body.appendChild(this.joystickContainer);
@@ -40,6 +44,7 @@ export class Joystick {
     this.joystickContainerRect = this.joystickContainer.getBoundingClientRect();
     this.joysticknubRect = this.joystick.getBoundingClientRect();
     this.setJoystickOffset()
+    this.centerNub()
 
     this.joystickRadius = this.joystickContainer.offsetWidth / 2 - this.joystick.offsetWidth / 2;
 
@@ -55,17 +60,14 @@ export class Joystick {
         const touch = e.touches[0];
         this.dx = touch.clientX - this.joystickCenterX;
         this.dy = touch.clientY - this.joystickCenterY;
-        
+
         const distance = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-        
         if (distance > this.joystickRadius) {
           const angle = Math.atan2(this.dy, this.dx);
           this.dx = this.joystickRadius * Math.cos(angle);
           this.dy = this.joystickRadius * Math.sin(angle);
         }
-
-        console.log(this.joystickOffset);
-        this.joystick.style.transform = `translate(${this.dx + this.joystickOffset}px, ${this.dy + this.joystickOffset}px)`;
+        this.centerNub()
       }
     });
 
@@ -74,7 +76,7 @@ export class Joystick {
       this.joystickActive = false;
       this.dx = 0;
       this.dy = 0;
-      this.joystick.style.transform = 'translate(30px, 30px)';
+      this.centerNub()
     });
   }
 }
