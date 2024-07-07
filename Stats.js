@@ -1,6 +1,6 @@
 export class Stats {
   constructor() {
-    this.maxDots = 10
+    this.maxDots = 25000
     this.dotAmout = 0
     this.money = 0
 
@@ -10,17 +10,18 @@ export class Stats {
   }
 
   setupStats() {
-
     this.moneyDisplay.textContent = `Money: ${this.money}`;
     this.dotAmoutDisplay.textContent = `Dots: ${this.dotAmout}/${this.maxDots}`;
 
-    console.log(this.statsContainer);
     this.statsContainer.append(this.moneyDisplay, this.dotAmoutDisplay);
     document.body.appendChild(this.statsContainer);
   };
 
-  updateMoneyDisplay(amount) {
-    this.money += amount;
+  updateMoneyDisplay() {
     this.moneyDisplay.textContent = `Money: ${this.money}`;
+  }
+
+  updateDotAmountDisplay() {
+    this.dotAmoutDisplay.textContent = `Dots: ${this.dotAmout}/${this.maxDots}`;
   }
 }

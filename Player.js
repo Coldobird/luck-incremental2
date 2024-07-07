@@ -1,10 +1,10 @@
 export class Player {
-  constructor({ canvas, ctx, dot, joystick, stats }) {
-    this.canvas = canvas
-    this.ctx = ctx
-    this.dot = dot
-    this.joystick = joystick
-    this.stats = stats
+  constructor({ canvas, ctx, dots, joystick, stats }) {
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.dots = dots;
+    this.joystick = joystick;
+    this.stats = stats;
 
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height / 2;
@@ -30,33 +30,42 @@ export class Player {
 
   update() {
     if (this.upKeys.some(key => this.keys[key])) this.y -= this.speed;
-    if (this.downKeys.some(key => this.keys[key])) this.y += this.speed
+    if (this.downKeys.some(key => this.keys[key])) this.y += this.speed;
     if (this.leftKeys.some(key => this.keys[key])) this.x -= this.speed;
     if (this.rightKeys.some(key => this.keys[key])) this.x += this.speed;
 
-    this.joystick.updateJoystick(this)
+    this.joystick.updateJoystick(this);
 
     // Prevent player from moving out of bounds
     this.x = Math.max(0, Math.min(this.canvas.width - this.width, this.x));
     this.y = Math.max(0, Math.min(this.canvas.height - this.height, this.y));
-  };
+  }
 
   checkCollision() {
-    const distX = this.x + this.width / 2 - this.dot.x;
-    const distY = this.y + this.height / 2 - this.dot.y;
-    const distance = Math.sqrt(distX * distX + distY * distY);
-  
-    if (distance < this.width / 2 + this.dot.radius) {
-      this.dot.x = Math.random() * this.canvas.width;
-      this.dot.y = Math.random() * this.canvas.height;
-      this.stats.updateMoneyDisplay(1);
+    let collisions = 0;
+
+    this.dots.forEach(dot => {
+      const distX = this.x + this.width / 2 - dot.x;
+      const distY = this.y + this.height / 2 - dot.y;
+      const distance = Math.sqrt(distX * distX + distY * distY);
+
+      if (distance < this.width / 2 + dot.radius) {
+        dot.x = Math.random() * this.canvas.width;    
+        dot.y = Math.random() * this.canvas.height;
+        collisions++;
+      }
+    });
+
+    if (collisions > 0) {
+      this.stats.money += collisions;
+      this.stats.updateMoneyDisplay(collisions);
     }
-  };
+  }
 
   draw() {
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
-  };
+  }
 }
 
 customElements.define('player-character', Player);
