@@ -8,8 +8,8 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const dot = new Dot({ canvas, ctx })
 const joystick = new Joystick({})
-const player = new Player({ canvas, ctx, dot, joystick })
 const stats = new Stats({})
+const player = new Player({ canvas, ctx, dot, joystick, stats })
 
 const isMobile = window.matchMedia("(pointer:none), (pointer:coarse)").matches;
 

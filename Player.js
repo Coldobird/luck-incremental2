@@ -1,9 +1,10 @@
 export class Player {
-  constructor({ canvas, ctx, dot, joystick }) {
+  constructor({ canvas, ctx, dot, joystick, stats }) {
     this.canvas = canvas
     this.ctx = ctx
     this.dot = dot
     this.joystick = joystick
+    this.stats = stats
 
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height / 2;
@@ -44,10 +45,11 @@ export class Player {
     const distX = this.x + this.width / 2 - this.dot.x;
     const distY = this.y + this.height / 2 - this.dot.y;
     const distance = Math.sqrt(distX * distX + distY * distY);
-
+  
     if (distance < this.width / 2 + this.dot.radius) {
       this.dot.x = Math.random() * this.canvas.width;
       this.dot.y = Math.random() * this.canvas.height;
+      this.stats.updateMoneyDisplay(1);
     }
   };
 

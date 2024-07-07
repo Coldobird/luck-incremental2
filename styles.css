@@ -34,9 +34,7 @@ canvas {
   max-width: 768px;
   max-height: 768px;
   background-color: #1e1e1e;
-  /* Dark mode container */
   border: 1px solid #ffffff;
-  /* Light border for dark mode */
   overflow: hidden;
   box-sizing: border-box;
 }
