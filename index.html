@@ -7,15 +7,22 @@
   <title>Incremental Game</title>
   <link rel="stylesheet" href="mobile-styles.css">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="upgradeTree.css">
 </head>
 
 <body>
   <game-screen>
     <canvas id="gameCanvas" width="786" height="786"></canvas>
+    <button class="nav-button">Upgrade</button>
   </game-screen>
-  <div id="upgrade-screen" class="hidden"></div>
+
+  <upgrade-screen class="screen hidden">
+    <div id="upgrade-container"></div>
+    <button class="nav-button" onclick="goToMain()">Back</button>
+  </upgrade-screen>
 
   <script type="module" src="game-loop.js"></script>
+  <script type="module" src="UpgradeTree.js"></script>
 </body>
 
 </html>
