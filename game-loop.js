@@ -1,11 +1,10 @@
 import { Dot } from "./Dot.js";
 import { Joystick } from "./joystick-controlls.js";
 import { Player } from "./player.js";
-import { Stats } from "./Stats.js";
+import stats from "./Stats.js";
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-const stats = new Stats({});
 const joystick = new Joystick({});
 const dots = [];
 const player = new Player({ canvas, ctx, dots, joystick, stats });

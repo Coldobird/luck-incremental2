@@ -1,4 +1,4 @@
-export class Stats {
+class Stats {
   constructor() {
     this.maxDots = 5
     this.dotAmount = 0
@@ -37,3 +37,6 @@ export class Stats {
     this.dotAmountDisplay.textContent = `Dots: ${this.dotAmount}/${this.maxDots}`;
   }
 }
+
+const statsInstance = new Stats();
+export default statsInstance;

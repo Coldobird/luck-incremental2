@@ -1,4 +1,4 @@
-import { Stats } from "./Stats.js";
+import stats from "./Stats.js";
 
 //upgradeTree.js
 const gameScreen = document.querySelector('game-screen');
@@ -6,7 +6,6 @@ const upgradeScreen = document.querySelector('upgrade-screen');
 const upgradeButton = document.querySelector('.upgrade-button');
 const backButton = document.querySelector('.back-button');
 const container = document.getElementById('upgrade-container');
-const stats = new Stats({});
 
 upgradeButton.addEventListener('click', () => {
   goToUpgrades()
