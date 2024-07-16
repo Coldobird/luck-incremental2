@@ -1,9 +1,12 @@
+import { Stats } from "./Stats.js";
+
 //upgradeTree.js
 const gameScreen = document.querySelector('game-screen');
 const upgradeScreen = document.querySelector('upgrade-screen');
 const upgradeButton = document.querySelector('.upgrade-button');
 const backButton = document.querySelector('.back-button');
 const container = document.getElementById('upgrade-container');
+const stats = new Stats({});
 
 upgradeButton.addEventListener('click', () => {
   goToUpgrades()
@@ -33,6 +36,8 @@ class UpgradeTree {
     this.upgrades = upgrades;
     this.upgradeMap = this.createUpgradeMap(upgrades);
     this.container = null;
+
+    this.stats = stats;
   }
 
   createUpgradeMap(upgrades) {
@@ -47,7 +52,7 @@ class UpgradeTree {
         const parentNames = upgrade.linkTo.split(',').map(name => name.trim());
         parentNames.forEach(parentName => {
           const parent = map.get(parentName);
-        if (parent) parent.children.push(upgrade);
+          if (parent) parent.children.push(upgrade);
         });
       }
     });
@@ -104,7 +109,7 @@ class UpgradeTree {
         treeContainers.appendChild(levelContainers[layer]);
       }
     });
-    
+
     this.upgrades.forEach(upgrade => {
       const layer = upgrade.layer || 0;
       const levelContainer = levelContainers[layer];
@@ -166,16 +171,21 @@ class UpgradeTree {
       const [key, value] = effect.split(' ').map(part => part.trim());
       const multiplier = parseFloat(key.slice(0, -1));
 
-      if (value in gameState) {
-        gameState[value] *= multiplier;
-      }
+      switch (value) {
+        case 'luck':
+          console.log(stats.getMultiMoney());
+          stats.setMultiMoney(stats.multiMoney *= multiplier)
+          break;
+        case 'spawnRate':
+          startInterval()
+          break;
 
-      if (value == 'spawnRate') {
-        startInterval()
+        default:
+          break;
       }
     });
 
-    console.log('Updated game state:', gameState);
+    console.log('Updated game state:');
   }
 
   removeUpgradeTree() {

@@ -14,10 +14,10 @@ const isMobile = window.matchMedia("(pointer:none), (pointer:coarse)").matches;
 
 const spawnDot = (numDots = 1) => {
   for (let i = 0; i < numDots; i++) {
-    if (stats.dotAmout < stats.maxDots) {
+    if (stats.dotAmount < stats.maxDots) {
       const dot = new Dot({ canvas, ctx, stats });
       dots.push(dot);
-      stats.dotAmout += 1;
+      stats.dotAmount += 1;
       stats.updateDotAmountDisplay();
     }
   }
@@ -28,7 +28,7 @@ const spawnDot = (numDots = 1) => {
 //
 if (isMobile) joystick.setupJoystickControls();
 stats.setupStats();
-setInterval(() => spawnDot(1), 1000);
+setInterval(() => spawnDot(1), 2000);
 
 //////////////////////////////////////////////////////////////////////////////
 // Main Game Loop

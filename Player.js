@@ -44,24 +44,27 @@ export class Player {
   checkCollision() {
     let collisions = 0;
 
-    this.dots.forEach(dot => {
+    for (let i = this.dots.length - 1; i >= 0; i--) {
+      const dot = this.dots[i];
       const distX = this.x + this.width / 2 - dot.x;
       const distY = this.y + this.height / 2 - dot.y;
       const distance = Math.sqrt(distX * distX + distY * distY);
-
+    
       if (distance < this.width / 2 + dot.radius) {
-        dot.x = Math.random() * this.canvas.width;    
-        dot.y = Math.random() * this.canvas.height;
         collisions++;
+        this.stats.dotAmount--;
+        this.stats.updateDotAmountDisplay();
+        this.dots.splice(i, 1);
       }
-    });
+    }
 
     if (collisions > 0) {
-      this.stats.money += collisions;
+      console.log(this.stats.getMultiMoney());
+      this.stats.money += collisions * this.stats.getMultiMoney();
       this.stats.updateMoneyDisplay(collisions);
     }
   }
-
+  
   draw() {
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.x, this.y, this.width, this.height);

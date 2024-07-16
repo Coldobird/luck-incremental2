@@ -18,10 +18,10 @@ export class Dot {
   };
 
   spawnDot() {
-    if (this.stats.dotAmout < this.stats.maxDots) {
+    if (this.stats.dotAmount < this.stats.maxDots) {
       this.x = Math.random() * this.canvas.width;
       this.y = Math.random() * this.canvas.height;
-      this.stats.dotAmout += 1;
+      this.stats.dotAmount += 1;
       this.stats.updateDotAmountDisplay();
     }
   };
