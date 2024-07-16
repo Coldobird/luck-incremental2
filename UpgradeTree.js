@@ -89,7 +89,7 @@ class UpgradeTree {
     const upgradeButton = document.createElement('button');
     upgradeButton.className = 'upgrade-button';
     upgradeButton.textContent = 'Upgrade';
-    upgradeButton.addEventListener('click', () => this.handleUpgrade(upgrade.name));
+    upgradeButton.addEventListener('click', () => this.handleUpgrade(upgrade.name, upgradeElement, upgradeButton));
     upgradeElement.appendChild(upgradeButton);
 
     return upgradeElement;
@@ -155,13 +155,13 @@ class UpgradeTree {
     svg.appendChild(line);
   }
 
-  handleUpgrade(upgradeId) {
+  handleUpgrade(upgradeId, upgradeElement, button) {
     const upgrade = this.upgradeMap.get(upgradeId);
     if (upgrade) {
       console.log(`Upgrading: ${upgrade.name}`);
       this.applyUpgrade(upgrade);
-      console.log(upgrade);
-      upgrade.classList.add('disabled')
+      upgradeElement.classList.add('disabled')
+      button.disabled = true
     }
   }
 

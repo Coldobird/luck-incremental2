@@ -70,3 +70,7 @@ level-container {
   gap: 16px;
   justify-content: center;
 }
+
+.disabled {
+  background-color: #131212;
+}
