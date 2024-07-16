@@ -5,6 +5,8 @@ class Stats {
     this.money = 0
     this.multiMoney = 1
     this.multiSpeed = 1
+    this.multiRange = 20
+    this.multiSpawnRate = 2000
 
     this.statsContainer = document.createElement('stats-container');
     this.moneyDisplay = document.createElement('money-display');

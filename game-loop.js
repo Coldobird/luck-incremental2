@@ -11,8 +11,10 @@ const player = new Player({ canvas, ctx, dots, joystick, stats });
 
 const isMobile = window.matchMedia("(pointer:none), (pointer:coarse)").matches;
 
-const spawnDot = (numDots = 1) => {
-  for (let i = 0; i < numDots; i++) {
+let lastDotSpawnTime = 0;
+
+const spawnDot = (count) => {
+  for (let i = 0; i < count; i++) {
     if (stats.dotAmount < stats.maxDots) {
       const dot = new Dot({ canvas, ctx, stats });
       dots.push(dot);
@@ -27,17 +29,22 @@ const spawnDot = (numDots = 1) => {
 //
 if (isMobile) joystick.setupJoystickControls();
 stats.setupStats();
-setInterval(() => spawnDot(1), 2000);
 
 //////////////////////////////////////////////////////////////////////////////
 // Main Game Loop
 //
-const gameLoop = () => {
+const gameLoop = (timestamp) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.update();
   player.checkCollision();
   player.draw();
   dots.forEach(dot => dot.drawDot());
+
+  if (timestamp - lastDotSpawnTime > stats.multiSpawnRate) {
+    spawnDot(1);
+    lastDotSpawnTime = timestamp;
+  }
+
   requestAnimationFrame(gameLoop);
 };
 

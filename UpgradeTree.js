@@ -160,6 +160,8 @@ class UpgradeTree {
     if (upgrade) {
       console.log(`Upgrading: ${upgrade.name}`);
       this.applyUpgrade(upgrade);
+      console.log(upgrade);
+      upgrade.classList.add('disabled')
     }
   }
 
@@ -168,7 +170,8 @@ class UpgradeTree {
 
     upgradeEffects.forEach(effect => {
       const [key, value] = effect.split(' ').map(part => part.trim());
-      const multiplier = parseFloat(key.slice(0, -1));
+      const sanitizedKey = key.replace(/[^0-9.]/g, '');
+      const multiplier = parseFloat(sanitizedKey);
 
       switch (value) {
         case 'luck':
@@ -176,15 +179,22 @@ class UpgradeTree {
           stats.setMultiMoney(stats.multiMoney *= multiplier)
           break;
         case 'spawnRate':
-          startInterval()
+          stats.multiSpawnRate /= multiplier
+          break;
+        case 'max':
+          stats.maxDots *= multiplier
+          break;
+        case 'playerSpeed':
+          stats.multiSpeed *= multiplier
+          break;
+        case 'range':
+          stats.multiRange += multiplier
           break;
 
         default:
           break;
       }
     });
-
-    console.log('Updated game state:');
   }
 
   removeUpgradeTree() {
@@ -206,7 +216,7 @@ const upgrades = [
   { name: '1.5x spawnRate', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
 
   { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
-  { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +.5 range' },
+  { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +10 range' },
   { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, 1.5x spawnRate', upgrade: '2x max' },
   { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: '1.5x spawnRate', upgrade: '2x luck, 1.5x max' },
 
