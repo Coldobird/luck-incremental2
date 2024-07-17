@@ -8,11 +8,11 @@ const backButton = document.querySelector('.back-button');
 const container = document.getElementById('upgrade-container');
 
 upgradeButton.addEventListener('click', () => {
-  goToUpgrades()
+  goToUpgrades();
 });
 
 backButton.addEventListener('click', () => {
-  goToMain()
+  goToMain();
 });
 
 const goToUpgrades = () => {
@@ -27,16 +27,15 @@ const goToMain = () => {
   gameScreen.classList.remove('hidden');
 };
 
-
-
-
 class UpgradeTree {
   constructor(upgrades) {
     this.upgrades = upgrades;
     this.upgradeMap = this.createUpgradeMap(upgrades);
     this.container = null;
-
     this.stats = stats;
+
+    // Load disabled state from local storage
+    this.disabledUpgrades = this.loadDisabledUpgrades();
   }
 
   createUpgradeMap(upgrades) {
@@ -89,6 +88,10 @@ class UpgradeTree {
     const upgradeButton = document.createElement('button');
     upgradeButton.className = 'upgrade-button';
     upgradeButton.textContent = 'Upgrade';
+    if (this.disabledUpgrades.includes(upgrade.name)) {
+      upgradeButton.disabled = true;
+      upgradeElement.classList.add('disabled');
+    }
     upgradeButton.addEventListener('click', () => this.handleUpgrade(upgrade.name, upgradeElement, upgradeButton));
     upgradeElement.appendChild(upgradeButton);
 
@@ -160,8 +163,9 @@ class UpgradeTree {
     if (upgrade) {
       console.log(`Upgrading: ${upgrade.name}`);
       this.applyUpgrade(upgrade);
-      upgradeElement.classList.add('disabled')
-      button.disabled = true
+      upgradeElement.classList.add('disabled');
+      button.disabled = true;
+      this.saveDisabledUpgrade(upgrade.name);
     }
   }
 
@@ -176,25 +180,34 @@ class UpgradeTree {
       switch (value) {
         case 'luck':
           console.log(stats.getMultiMoney());
-          stats.setMultiMoney(stats.multiMoney *= multiplier)
+          stats.setMultiMoney(stats.multiMoney *= multiplier);
           break;
         case 'spawnRate':
-          stats.multiSpawnRate /= multiplier
+          stats.multiSpawnRate /= multiplier;
           break;
         case 'max':
-          stats.maxDots *= multiplier
+          stats.maxDots *= multiplier;
           break;
         case 'playerSpeed':
-          stats.multiSpeed *= multiplier
+          stats.multiSpeed *= multiplier;
           break;
         case 'range':
-          stats.multiRange += multiplier
+          stats.multiRange += multiplier;
           break;
-
         default:
           break;
       }
     });
+  }
+
+  saveDisabledUpgrade(upgradeName) {
+    this.disabledUpgrades.push(upgradeName);
+    localStorage.setItem('disabledUpgrades', JSON.stringify(this.disabledUpgrades));
+  }
+
+  loadDisabledUpgrades() {
+    const disabledUpgrades = localStorage.getItem('disabledUpgrades');
+    return disabledUpgrades ? JSON.parse(disabledUpgrades) : [];
   }
 
   removeUpgradeTree() {
