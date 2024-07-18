@@ -25,7 +25,6 @@ export class UpgradeTree {
     this.container = null;
     this.stats = stats;
 
-    console.log(this.stats);
     this.disabledUpgrades = this.loadDisabledUpgrades();
     this.loadStats();
   }
@@ -51,7 +50,7 @@ export class UpgradeTree {
     return map;
   }
 
-  displayUpgradeTree(container) {
+  displayUpgradeTree(container, upgradeScreen) {
     this.container = container;
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -61,6 +60,8 @@ export class UpgradeTree {
 
     this.renderUpgrades();
     this.renderConnections();
+    console.log(this.container);
+    upgradeScreen.classList.add('hidden');
   }
 
   createUpgradeElement(upgrade) {
@@ -209,7 +210,6 @@ export class UpgradeTree {
   loadStats() {
     const savedStats = JSON.parse(localStorage.getItem('stats'));
     if (savedStats) {
-      console.log(this.stats);
       this.stats.setAllStats(savedStats);
     }
   }

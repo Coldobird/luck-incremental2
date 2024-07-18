@@ -80,3 +80,7 @@ stats-container > * {
 .hidden {
   display: none;
 }
+
+.invisible {
+  opacity: 0;
+}

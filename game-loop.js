@@ -8,6 +8,7 @@ import { UpgradeTree } from "./upgradeTree.js";
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const upgradeContainer = document.getElementById('upgrade-container');
+const upgradeScreen = document.querySelector('upgrade-screen');
 
 const dots = [];
 const isMobile = window.matchMedia("(pointer:none), (pointer:coarse)").matches;
@@ -16,7 +17,7 @@ let lastDotSpawnTime = 0;
 const joystick = new Joystick({});
 const player = new Player({ canvas, ctx, dots, joystick, stats });
 const upgradeTree = new UpgradeTree({ stats });
-const navigation = new Navigation({ upgradeContainer });
+const navigation = new Navigation({ upgradeContainer, upgradeScreen });
 
 const spawnDot = (count) => {
   for (let i = 0; i < count; i++) {
@@ -35,7 +36,7 @@ const spawnDot = (count) => {
 if (isMobile) joystick.setupJoystickControls();
 stats.setupStats();
 navigation.setup()
-upgradeTree.displayUpgradeTree(upgradeContainer);
+upgradeTree.displayUpgradeTree(upgradeContainer, upgradeScreen);
 
 //////////////////////////////////////////////////////////////////////////////
 // Main Game Loop
