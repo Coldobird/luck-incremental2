@@ -1,5 +1,5 @@
 export class Modal {
-  constructor({ id, message, confirmText = "Yes", cancelText = "Cancel" }) {
+  constructor({ id, message, confirmText = "Reset!", cancelText = "Cancel" }) {
     this.id = id;
     this.message = message;
     this.confirmText = confirmText;
