@@ -3,8 +3,10 @@ export class Navigation {
     this.upgradeContainer = upgradeContainer
     this.upgradeScreen = upgradeScreen
     this.gameScreen = document.querySelector('game-screen');
-    this.upgradeButton = document.querySelector('.upgrade-button');
     this.backButton = document.querySelector('.back-button');
+    this.upgradeButton = document.querySelector('.nav-upgrade-button');
+    this.resetButton = document.querySelector('.nav-reset-button');
+
   }
 
   goToUpgrades() {
@@ -20,5 +22,10 @@ export class Navigation {
   setup() {
     this.upgradeButton.addEventListener('click', () => this.goToUpgrades());
     this.backButton.addEventListener('click', () => this.goToMain());
+
+    this.resetButton.addEventListener('click', () => {
+      localStorage.clear();
+      window.location.reload();
+    });
   }
 }

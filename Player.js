@@ -40,6 +40,7 @@ export class Player {
 
   checkCollision() {
     let collisions = 0;
+    const popSound = new Audio('midia/pop.mp3');
 
     for (let i = this.dots.length - 1; i >= 0; i--) {
       const dot = this.dots[i];
@@ -56,6 +57,7 @@ export class Player {
     }
 
     if (collisions > 0) {
+      popSound.play();
       this.stats.money += collisions * this.stats.multiMoney;
       this.stats.updateMoneyDisplay();
     }

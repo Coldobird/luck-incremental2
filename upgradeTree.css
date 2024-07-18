@@ -8,20 +8,6 @@ upgrade-screen {
   display: none;
 }
 
-.nav-button {
-  margin-top: 1.3%;
-  padding: 1.3% 2.6%;
-  font-size: 24px;
-  min-height: 30px;
-  background-color: #333;
-  /* Dark button background */
-  color: #fff;
-  /* Light button text */
-  border: 1px solid #fff;
-  /* Light button border */
-  cursor: pointer;
-}
-
 #upgrade-container {
   position: relative;
   padding: 20px;
