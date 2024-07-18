@@ -1,3 +1,4 @@
+import { Modal } from "./modal/Modal.js";
 export class Navigation {
   constructor({ upgradeContainer, upgradeScreen }) {
     this.upgradeContainer = upgradeContainer
@@ -7,6 +8,10 @@ export class Navigation {
     this.upgradeButton = document.querySelector('.nav-upgrade-button');
     this.resetButton = document.querySelector('.nav-reset-button');
 
+    this.resetModal = new Modal({
+      id: 'confirmation-modal',
+      message: 'Are you sure you want to reset all progress?'
+    });
   }
 
   goToUpgrades() {
@@ -24,8 +29,16 @@ export class Navigation {
     this.backButton.addEventListener('click', () => this.goToMain());
 
     this.resetButton.addEventListener('click', () => {
-      localStorage.clear();
-      window.location.reload();
+      this.resetModal.onConfirm(() => {
+        localStorage.clear();
+        window.location.reload();
+      });
+      
+      this.resetModal.onCancel(() => {
+        this.resetModal.hide();
+      });
+
+      this.resetModal.show();
     });
   }
 }
