@@ -56,9 +56,8 @@ export class Player {
     }
 
     if (collisions > 0) {
-      console.log(this.stats.getMultiMoney());
-      this.stats.money += collisions * this.stats.getMultiMoney();
-      this.stats.updateMoneyDisplay(collisions);
+      this.stats.money += collisions * this.stats.multiMoney;
+      this.stats.updateMoneyDisplay();
     }
   }
   

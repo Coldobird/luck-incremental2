@@ -13,14 +13,37 @@ class Stats {
     this.dotAmountDisplay = document.createElement('dot-amount-display');
   }
 
-  getMultiMoney() {
-    console.log(this.multiMoney);
-    return this.multiMoney;
+  getAllStats() {
+    return {
+      multiMoney: this.multiMoney,
+      multiSpawnRate: this.multiSpawnRate,
+      maxDots: this.maxDots,
+      multiSpeed: this.multiSpeed,
+      multiRange: this.multiRange,
+      money: this.money,
+    };
+  }
+  
+  saveStats() {
+    localStorage.setItem('stats', JSON.stringify(this.getAllStats()));
   }
 
-  setMultiMoney(value) {
-    console.log(value);
-    this.multiMoney = value;
+  setAllStats(stats) {
+    this.multiMoney = stats.multiMoney;
+    this.multiSpawnRate = stats.multiSpawnRate;
+    this.maxDots = stats.maxDots;
+    this.multiSpeed = stats.multiSpeed;
+    this.multiRange = stats.multiRange;
+    this.money = stats.money;
+  }
+
+  getMoney() {
+    return this.money;
+  }
+
+  setMoney(value) {
+    this.money = value;
+    this.updateMoneyDisplay()
   }
 
   setupStats() {

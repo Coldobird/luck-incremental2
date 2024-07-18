@@ -1,42 +1,35 @@
-import stats from "./Stats.js";
-
 //upgradeTree.js
-const gameScreen = document.querySelector('game-screen');
-const upgradeScreen = document.querySelector('upgrade-screen');
-const upgradeButton = document.querySelector('.upgrade-button');
-const backButton = document.querySelector('.back-button');
-const container = document.getElementById('upgrade-container');
+const upgrades = [
+  { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
 
-upgradeButton.addEventListener('click', () => {
-  goToUpgrades();
-});
+  { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
 
-backButton.addEventListener('click', () => {
-  goToMain();
-});
+  { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
+  { name: 'Upgrade 1', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.25x spawnRate, 2x max' },
+  { name: '1.5x spawnRate', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
 
-const goToUpgrades = () => {
-  gameScreen.classList.add('hidden');
-  upgradeScreen.classList.remove('hidden');
-  upgradeTree.displayUpgradeTree(container);
-};
+  { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
+  { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +10 range' },
+  { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, 1.5x spawnRate', upgrade: '2x max' },
+  { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: '1.5x spawnRate', upgrade: '2x luck, 1.5x max' },
 
-const goToMain = () => {
-  upgradeTree.removeUpgradeTree();
-  upgradeScreen.classList.add('hidden');
-  gameScreen.classList.remove('hidden');
-};
+  { name: '+ luck', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x luck' },
+  { name: '+ max', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x max' },
+  { name: '+ playerSpeed', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x playerSpeed' },
+  { name: '+ spawnRate', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x spawnRate' },
+];
 
-class UpgradeTree {
-  constructor(upgrades) {
-    this.upgrades = upgrades;
+export class UpgradeTree {
+  constructor({ stats }) {
     this.upgradeMap = this.createUpgradeMap(upgrades);
     this.container = null;
     this.stats = stats;
 
-    // Load disabled state from local storage
+    console.log(this.stats);
     this.disabledUpgrades = this.loadDisabledUpgrades();
+    this.loadStats();
   }
+
 
   createUpgradeMap(upgrades) {
     const map = new Map();
@@ -103,7 +96,7 @@ class UpgradeTree {
     const treeContainers = document.createElement('tree-containers');
     this.container.appendChild(treeContainers);
 
-    this.upgrades.forEach(upgrade => {
+    upgrades.forEach(upgrade => {
       const layer = upgrade.layer;
       if (!levelContainers[layer]) {
         levelContainers[layer] = document.createElement('level-container');
@@ -112,7 +105,7 @@ class UpgradeTree {
       }
     });
 
-    this.upgrades.forEach(upgrade => {
+    upgrades.forEach(upgrade => {
       const layer = upgrade.layer || 0;
       const levelContainer = levelContainers[layer];
 
@@ -124,7 +117,7 @@ class UpgradeTree {
   }
 
   renderConnections() {
-    this.upgrades.forEach(upgrade => {
+    upgrades.forEach(upgrade => {
       upgrade.children.forEach(child => {
         this.drawConnection(upgrade.name, child.name);
       });
@@ -161,13 +154,17 @@ class UpgradeTree {
   handleUpgrade(upgradeId, upgradeElement, button) {
     const upgrade = this.upgradeMap.get(upgradeId);
     if (upgrade) {
-      console.log(`Upgrading: ${upgrade.name}`);
-      this.applyUpgrade(upgrade);
-      upgradeElement.classList.add('disabled');
-      button.disabled = true;
-      this.saveDisabledUpgrade(upgrade.name);
+      const playerMoney = this.stats.getMoney();
+      if (playerMoney >= upgrade.cost) {
+        this.stats.setMoney(playerMoney - upgrade.cost);
+        this.applyUpgrade(upgrade);
+        upgradeElement.classList.add('disabled');
+        button.disabled = true;
+        this.saveUpgradeState(upgrade.name);
+      }
     }
   }
+
 
   applyUpgrade(upgrade) {
     const upgradeEffects = upgrade.upgrade.split(',').map(effect => effect.trim());
@@ -179,25 +176,42 @@ class UpgradeTree {
 
       switch (value) {
         case 'luck':
-          console.log(stats.getMultiMoney());
-          stats.setMultiMoney(stats.multiMoney *= multiplier);
+          this.stats.multiMoney *= multiplier;
           break;
         case 'spawnRate':
-          stats.multiSpawnRate /= multiplier;
+          this.stats.multiSpawnRate /= multiplier;
           break;
         case 'max':
-          stats.maxDots *= multiplier;
+          this.stats.maxDots *= multiplier;
           break;
         case 'playerSpeed':
-          stats.multiSpeed *= multiplier;
+          this.stats.multiSpeed *= multiplier;
           break;
         case 'range':
-          stats.multiRange += multiplier;
+          this.stats.multiRange += multiplier;
           break;
         default:
           break;
       }
     });
+
+    this.stats.saveStats();
+  }
+
+  saveUpgradeState(upgradeName) {
+    let disabledUpgrades = JSON.parse(localStorage.getItem('disabledUpgrades')) || [];
+    if (!disabledUpgrades.includes(upgradeName)) {
+      disabledUpgrades.push(upgradeName);
+      localStorage.setItem('disabledUpgrades', JSON.stringify(disabledUpgrades));
+    }
+  }
+
+  loadStats() {
+    const savedStats = JSON.parse(localStorage.getItem('stats'));
+    if (savedStats) {
+      console.log(this.stats);
+      this.stats.setAllStats(savedStats);
+    }
   }
 
   saveDisabledUpgrade(upgradeName) {
@@ -206,8 +220,16 @@ class UpgradeTree {
   }
 
   loadDisabledUpgrades() {
-    const disabledUpgrades = localStorage.getItem('disabledUpgrades');
-    return disabledUpgrades ? JSON.parse(disabledUpgrades) : [];
+    const disabledUpgrades = JSON.parse(localStorage.getItem('disabledUpgrades')) || [];
+    disabledUpgrades.forEach(upgradeName => {
+      const upgradeElement = this.container?.querySelector(`.upgrade[data-name='${upgradeName}']`);
+      if (upgradeElement) {
+        const button = upgradeElement.querySelector('.upgrade-button');
+        upgradeElement.classList.add('disabled');
+        button.disabled = true;
+      }
+    });
+    return JSON.parse(localStorage.getItem('disabledUpgrades')) || [];
   }
 
   removeUpgradeTree() {
@@ -218,25 +240,3 @@ class UpgradeTree {
     }
   }
 }
-
-const upgrades = [
-  { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
-
-  { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
-
-  { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
-  { name: 'Upgrade 1', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.25x spawnRate, 2x max' },
-  { name: '1.5x spawnRate', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
-
-  { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
-  { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +10 range' },
-  { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, 1.5x spawnRate', upgrade: '2x max' },
-  { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: '1.5x spawnRate', upgrade: '2x luck, 1.5x max' },
-
-  { name: '+ luck', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x luck' },
-  { name: '+ max', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x max' },
-  { name: '+ playerSpeed', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x playerSpeed' },
-  { name: '+ spawnRate', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x spawnRate' },
-];
-
-const upgradeTree = new UpgradeTree(upgrades);
