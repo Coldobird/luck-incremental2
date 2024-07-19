@@ -1,3 +1,5 @@
+import AudioPool from './AudioPool.js';
+
 export class Player {
   constructor({ canvas, ctx, dots, joystick, stats }) {
     this.canvas = canvas;
@@ -6,11 +8,7 @@ export class Player {
     this.joystick = joystick;
     this.stats = stats;
 
-    this.maxSounds = 8; // Maximum number of sounds that can play at once
-    this.currentSounds = 0; // Current number of playing sounds
-    this.audioPool = []; // Pool of audio elements
-    this.poolSize = 10; // Size of the audio pool
-    this.initAudioPool('midia/pop.mp3');
+    this.popSoundPool = new AudioPool('midia/pop.mp3', 8, 8);
 
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height / 2;
@@ -29,25 +27,6 @@ export class Player {
     window.addEventListener('keyup', (e) => {
       this.keys[e.key] = false;
     });
-  }
-
-  initAudioPool(src) {
-    for (let i = 0; i < this.poolSize; i++) {
-      const audio = new Audio(src);
-      audio.addEventListener('ended', () => {
-        this.currentSounds--;
-      });
-      this.audioPool.push(audio);
-    }
-  }
-
-  getAudio() {
-    for (const audio of this.audioPool) {
-      if (audio.paused) {
-        return audio;
-      }
-    }
-    return null;
   }
 
   update() {
@@ -80,20 +59,9 @@ export class Player {
     }
 
     if (collisions > 0) {
-      if (this.currentSounds < this.maxSounds) {
-        this.playSound();
-      }
+      this.popSoundPool.playSound(); // Use the audio pool to play sound
       this.stats.money += collisions * this.stats.multiMoney;
       this.stats.updateMoneyDisplay();
-    }
-  }
-
-  playSound() {
-    const popSound = this.getAudio();
-    if (popSound) {
-      this.currentSounds++;
-      popSound.currentTime = 0; // Reset the audio to start from the beginning
-      popSound.play();
     }
   }
   
