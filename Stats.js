@@ -1,13 +1,13 @@
 class Stats {
   constructor() {
-    this.maxDots = 5 // lag > 60fps at 21k dots
-    this.dotPerSpawn = 100
+    this.maxDots = 20000 // lag > 60fps at 21k dots
+    this.dotPerSpawn = 1
+    this.multiSpawnRate = 1
     this.dotAmount = 0
     this.money = 0
     this.multiMoney = 1
-    this.multiSpeed = 2
+    this.multiSpeed = 5
     this.multiRange = 20
-    this.multiSpawnRate = 2000
 
     this.statsContainer = document.createElement('stats-container');
     this.moneyDisplay = document.createElement('money-display');
