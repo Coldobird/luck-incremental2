@@ -5,7 +5,7 @@ class Stats {
     this.dotAmount = 0
     this.money = 0
     this.multiMoney = 1
-    this.multiSpeed = 1
+    this.multiSpeed = 2
     this.multiRange = 20
     this.multiSpawnRate = 2000
 
