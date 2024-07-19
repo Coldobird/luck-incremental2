@@ -19,23 +19,12 @@ const player = new Player({ canvas, ctx, dots, joystick, stats });
 const upgradeTree = new UpgradeTree({ stats });
 const navigation = new Navigation({ upgradeContainer, upgradeScreen });
 
-const spawnDot = (count) => {
-  for (let i = 0; i < count; i++) {
-    if (stats.dotAmount < stats.maxDots) {
-      const dot = new Dot({ canvas, ctx, stats });
-      dots.push(dot);
-      stats.dotAmount += 1;
-      stats.updateDotAmountDisplay();
-    }
-  }
-};
-
 //////////////////////////////////////////////////////////////////////////////
 // On Load
 //
 if (isMobile) joystick.setupJoystickControls();
 stats.setupStats();
-navigation.setup()
+navigation.setup();
 upgradeTree.displayUpgradeTree(upgradeContainer, upgradeScreen);
 
 //////////////////////////////////////////////////////////////////////////////
@@ -49,7 +38,7 @@ const gameLoop = (timestamp) => {
   dots.forEach(dot => dot.drawDot());
 
   if (timestamp - lastDotSpawnTime > stats.multiSpawnRate) {
-    spawnDot(stats.dotPerSpawn);
+    Dot.spawnDots(stats.dotPerSpawn, { canvas, ctx, stats, dots });
     lastDotSpawnTime = timestamp;
   }
 

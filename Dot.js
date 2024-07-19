@@ -1,13 +1,24 @@
 export class Dot {
   constructor({ canvas, ctx, stats }) {
-    this.canvas = canvas
-    this.ctx = ctx
-    this.stats = stats
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.stats = stats;
 
-    this.x = Math.random() * this.canvas.width
-    this.y = Math.random() * this.canvas.height
-    this.radius = 10
-    this.color = 'red'
+    this.x = Math.random() * this.canvas.width;
+    this.y = Math.random() * this.canvas.height;
+    this.radius = 10;
+    this.color = 'red';
+  }
+
+  static spawnDots(count, { canvas, ctx, stats, dots }) {
+    for (let i = 0; i < count; i++) {
+      if (stats.dotAmount < stats.maxDots) {
+        const dot = new Dot({ canvas, ctx, stats });
+        dots.push(dot);
+        stats.dotAmount += 1;
+        stats.updateDotAmountDisplay();
+      }
+    }
   }
 
   drawDot() {
@@ -15,16 +26,7 @@ export class Dot {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     this.ctx.fill();
-  };
-
-  spawnDot() {
-    if (this.stats.dotAmount < this.stats.maxDots) {
-      this.x = Math.random() * this.canvas.width;
-      this.y = Math.random() * this.canvas.height;
-      this.stats.dotAmount += 1;
-      this.stats.updateDotAmountDisplay();
-    }
-  };
+  }
 }
 
 customElements.define('dot-object', Dot);
