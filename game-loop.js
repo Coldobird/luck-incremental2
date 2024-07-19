@@ -49,7 +49,7 @@ const gameLoop = (timestamp) => {
   dots.forEach(dot => dot.drawDot());
 
   if (timestamp - lastDotSpawnTime > stats.multiSpawnRate) {
-    spawnDot(1);
+    spawnDot(stats.dotPerSpawn);
     lastDotSpawnTime = timestamp;
   }
 

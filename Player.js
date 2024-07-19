@@ -6,6 +6,12 @@ export class Player {
     this.joystick = joystick;
     this.stats = stats;
 
+    this.maxSounds = 8; // Maximum number of sounds that can play at once
+    this.currentSounds = 0; // Current number of playing sounds
+    this.audioPool = []; // Pool of audio elements
+    this.poolSize = 10; // Size of the audio pool
+    this.initAudioPool('midia/pop.mp3');
+
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height / 2;
     this.color = 'blue';
@@ -25,6 +31,25 @@ export class Player {
     });
   }
 
+  initAudioPool(src) {
+    for (let i = 0; i < this.poolSize; i++) {
+      const audio = new Audio(src);
+      audio.addEventListener('ended', () => {
+        this.currentSounds--;
+      });
+      this.audioPool.push(audio);
+    }
+  }
+
+  getAudio() {
+    for (const audio of this.audioPool) {
+      if (audio.paused) {
+        return audio;
+      }
+    }
+    return null;
+  }
+
   update() {
     if (this.upKeys.some(key => this.keys[key])) this.y -= this.stats.multiSpeed;
     if (this.downKeys.some(key => this.keys[key])) this.y += this.stats.multiSpeed;
@@ -40,8 +65,6 @@ export class Player {
 
   checkCollision() {
     let collisions = 0;
-    const popSound = new Audio('midia/pop.mp3');
-
     for (let i = this.dots.length - 1; i >= 0; i--) {
       const dot = this.dots[i];
       const distX = this.x + this.stats.multiRange / 2 - dot.x;
@@ -57,9 +80,20 @@ export class Player {
     }
 
     if (collisions > 0) {
-      popSound.play();
+      if (this.currentSounds < this.maxSounds) {
+        this.playSound();
+      }
       this.stats.money += collisions * this.stats.multiMoney;
       this.stats.updateMoneyDisplay();
+    }
+  }
+
+  playSound() {
+    const popSound = this.getAudio();
+    if (popSound) {
+      this.currentSounds++;
+      popSound.currentTime = 0; // Reset the audio to start from the beginning
+      popSound.play();
     }
   }
   

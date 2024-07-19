@@ -1,6 +1,7 @@
 class Stats {
   constructor() {
-    this.maxDots = 5
+    this.maxDots = 5 // lag > 60fps at 21k dots
+    this.dotPerSpawn = 100
     this.dotAmount = 0
     this.money = 0
     this.multiMoney = 1
