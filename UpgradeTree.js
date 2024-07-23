@@ -60,10 +60,28 @@ export class UpgradeTree {
 
     this.renderUpgrades();
     this.renderConnections();
-    console.log(this.container);
     upgradeScreen.classList.add('hidden');
   }
 
+  isUpgradeBuyable(upgrade) {
+    if (!upgrade.linkTo) return true;
+
+    const parentNames = upgrade.linkTo.split(',').map(name => name.trim());
+    console.log(parentNames);
+    console.log(this.disabledUpgrades);
+    return parentNames.every(parentName => this.disabledUpgrades.includes(parentName));
+  }
+
+  updateUpgradeVisibility() {
+    upgrades.forEach(upgrade => {
+      const upgradeElement = this.container.querySelector(`.upgrade[data-name='${upgrade.name}']`);
+      console.log(this.isUpgradeBuyable(upgrade));
+      if (upgradeElement && this.isUpgradeBuyable(upgrade)) {
+        upgradeElement.classList.remove('invisible');
+      }
+    });
+  }
+  
   createUpgradeElement(upgrade) {
     const upgradeElement = document.createElement('div');
     upgradeElement.className = 'upgrade';
@@ -82,6 +100,11 @@ export class UpgradeTree {
     const upgradeButton = document.createElement('button');
     upgradeButton.className = 'upgrade-button';
     upgradeButton.textContent = 'Upgrade';
+
+    if (!this.isUpgradeBuyable(upgrade)) {
+      upgradeElement.classList.add('invisible');
+    }
+
     if (this.disabledUpgrades.includes(upgrade.name)) {
       upgradeButton.disabled = true;
       upgradeElement.classList.add('disabled');
@@ -96,32 +119,40 @@ export class UpgradeTree {
     const levelContainers = {};
     const treeContainers = document.createElement('tree-containers');
     this.container.appendChild(treeContainers);
-
+  
     upgrades.forEach(upgrade => {
       const layer = upgrade.layer;
       if (!levelContainers[layer]) {
         levelContainers[layer] = document.createElement('level-container');
-        levelContainers[layer].classList.add(`level-${layer}`); // Add class based on linkTo
+        levelContainers[layer].classList.add(`level-${layer}`);
         treeContainers.appendChild(levelContainers[layer]);
       }
     });
-
+  
     upgrades.forEach(upgrade => {
       const layer = upgrade.layer || 0;
       const levelContainer = levelContainers[layer];
-
+  
       if (levelContainer) {
         const upgradeElement = this.createUpgradeElement(upgrade);
         levelContainer.appendChild(upgradeElement);
       }
     });
+  
+    this.updateUpgradeVisibility();
   }
 
   renderConnections() {
+    const svg = this.container.querySelector('svg');
+    svg.innerHTML = ''; // Clear existing connections
     upgrades.forEach(upgrade => {
-      upgrade.children.forEach(child => {
-        this.drawConnection(upgrade.name, child.name);
-      });
+      if (!this.container.querySelector(`.upgrade[data-name='${upgrade.name}']`).classList.contains('invisible')) {
+        upgrade.children.forEach(child => {
+          if (!this.container.querySelector(`.upgrade[data-name='${child.name}']`).classList.contains('invisible')) {
+            this.drawConnection(upgrade.name, child.name);
+          }
+        });
+      }
     });
   }
 
@@ -162,10 +193,11 @@ export class UpgradeTree {
         upgradeElement.classList.add('disabled');
         button.disabled = true;
         this.saveUpgradeState(upgrade.name);
+        this.updateUpgradeVisibility();
+        this.renderConnections(); // Re-render connections to account for new visible upgrades
       }
     }
   }
-
 
   applyUpgrade(upgrade) {
     const upgradeEffects = upgrade.upgrade.split(',').map(effect => effect.trim());
@@ -198,27 +230,28 @@ export class UpgradeTree {
 
     this.stats.saveStats();
   }
-
-  saveUpgradeState(upgradeName) {
-    let disabledUpgrades = JSON.parse(localStorage.getItem('disabledUpgrades')) || [];
-    if (!disabledUpgrades.includes(upgradeName)) {
-      disabledUpgrades.push(upgradeName);
-      localStorage.setItem('disabledUpgrades', JSON.stringify(disabledUpgrades));
-    }
-  }
-
+  
   loadStats() {
     const savedStats = JSON.parse(localStorage.getItem('stats'));
     if (savedStats) {
       this.stats.setAllStats(savedStats);
     }
   }
-
+  
   saveDisabledUpgrade(upgradeName) {
     this.disabledUpgrades.push(upgradeName);
     localStorage.setItem('disabledUpgrades', JSON.stringify(this.disabledUpgrades));
   }
 
+  saveUpgradeState(upgradeName) {
+    let disabledUpgrades = JSON.parse(localStorage.getItem('disabledUpgrades')) || [];
+    if (!disabledUpgrades.includes(upgradeName)) {
+      disabledUpgrades.push(upgradeName);
+      localStorage.setItem('disabledUpgrades', JSON.stringify(disabledUpgrades));
+      this.saveDisabledUpgrade(upgradeName)
+    }
+  }
+  
   loadDisabledUpgrades() {
     const disabledUpgrades = JSON.parse(localStorage.getItem('disabledUpgrades')) || [];
     disabledUpgrades.forEach(upgradeName => {
