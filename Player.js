@@ -1,12 +1,13 @@
 import AudioPool from './AudioPool.js';
 
 export class Player {
-  constructor({ canvas, ctx, dots, joystick, stats }) {
+  constructor({ canvas, ctx, dots, joystick, stats, grid }) {
     this.canvas = canvas;
     this.ctx = ctx;
     this.dots = dots;
     this.joystick = joystick;
     this.stats = stats;
+    this.grid = grid;
 
     this.popSoundPool = new AudioPool('midia/pop.mp3', 8, 8);
 
@@ -54,6 +55,7 @@ export class Player {
         collisions++;
         this.stats.dotAmount--;
         this.stats.updateDotAmountDisplay();
+        this.grid.removeDot(dot);  // Remove dot from grid
         this.dots.splice(i, 1);
       }
     }
@@ -64,7 +66,7 @@ export class Player {
       this.stats.updateMoneyDisplay();
     }
   }
-  
+
   draw() {
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.x, this.y, this.stats.multiRange, this.stats.multiRange);

@@ -4,6 +4,7 @@ import { Navigation } from "./navigation.js";
 import { Player } from "./player.js";
 import stats from "./Stats.js";
 import { UpgradeTree } from "./upgradeTree.js";
+import { Grid } from "./Grid.js";
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -12,10 +13,11 @@ const upgradeScreen = document.querySelector('upgrade-screen');
 
 const dots = [];
 const isMobile = window.matchMedia("(pointer:none), (pointer:coarse)").matches;
-let lastDotSpawnTime = 0;
+let lastDotSpawnTime = -stats.multiSpawnRate;
 
 const joystick = new Joystick({});
-const player = new Player({ canvas, ctx, dots, joystick, stats });
+const grid = new Grid(20);
+const player = new Player({ canvas, ctx, dots, joystick, stats, grid });
 const upgradeTree = new UpgradeTree({ stats });
 const navigation = new Navigation({ upgradeContainer, upgradeScreen });
 
@@ -38,7 +40,7 @@ const gameLoop = (timestamp) => {
   dots.forEach(dot => dot.drawDot());
 
   if (timestamp - lastDotSpawnTime > stats.multiSpawnRate) {
-    Dot.spawnDots(stats.dotPerSpawn, { canvas, ctx, stats, dots });
+    Dot.spawnDots(stats.dotPerSpawn, { canvas, ctx, stats, dots, player, grid });
     lastDotSpawnTime = timestamp;
   }
 
