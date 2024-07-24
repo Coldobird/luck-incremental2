@@ -1,4 +1,6 @@
 /* style.css */
+@import url(colors/dark-mc.css);
+
 body,
 html {
     font-family: Open Sans, sans-serif;
@@ -9,9 +11,9 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #121212;
+    background-color: var(--md-sys-color-background);
     /* Dark mode background */
-    color: #ffffff;
+    color: var(--md-sys-color-on-background);
     /* Light text for dark mode */
 }
 
@@ -38,9 +40,9 @@ navigation-menu {
   font-size: 24px;
   min-height: 30px;
   white-space: nowrap;
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #fff;
+  background-color: var(--md-sys-color-on-primary);
+  color: var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-primary);
   cursor: pointer;
 }
 
@@ -55,8 +57,8 @@ canvas {
   height: 90vmin;
   max-width: 768px;
   max-height: 768px;
-  background-color: #1e1e1e;
-  border: 1px solid #ffffff;
+  background-color: var(--md-sys-color-on-primary);
+  border: 1px solid var(--md-sys-color-primary);
   overflow: hidden;
   box-sizing: border-box;
 }
