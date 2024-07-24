@@ -1,22 +1,22 @@
 //upgradeTree.js
 const upgrades = [
-  { name: 'Lucky 1', cost: 10, layer: '0', linkTo: null, upgrade: '2x luck' },
+  { name: 'Upgrade 1', cost: 10, layer: '0', linkTo: null, upgrade: [{ type: 'luck', value: 2 }] },
 
-  { name: 'Lucky 2', cost: 25, layer: '1', linkTo: 'Lucky 1', upgrade: '2x luck' },
+  { name: 'Upgrade 2', cost: 25, layer: '1', linkTo: 'Upgrade 1', upgrade: [{ type: 'luck', value: 2 }] },
 
-  { name: 'Lucky 3', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x luck' },
-  { name: 'Upgrade 1', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.25x spawnRate, 2x max' },
-  { name: '1.5x spawnRate', cost: 50, layer: '2', linkTo: 'Lucky 2', upgrade: '1.5x spawnRate' },
+  { name: 'Upgrade 3', cost: 50, layer: '2', linkTo: 'Upgrade 2', upgrade: [{ type: 'luck', value: 1.25 }] },
+  { name: 'Upgrade 4', cost: 50, layer: '2', linkTo: 'Upgrade 2', upgrade: [{ type: 'spawn rate', value: 1.25 }, { type: 'max dots', value: 2 }] },
+  { name: 'Upgrade 5', cost: 50, layer: '2', linkTo: 'Upgrade 2', upgrade: [{ type: 'spawn rate', value: 1.5 }] },
 
-  { name: 'Lucky 4', cost: 250, layer: '3', linkTo: 'Lucky 3', upgrade: '3x luck' },
-  { name: 'Upgrade 3', cost: 150, layer: '3', linkTo: 'Upgrade 1', upgrade: '2x playerSpeed, +10 range' },
-  { name: 'Upgrade 4', cost: 150, layer: '3', linkTo: 'Upgrade 1, 1.5x spawnRate', upgrade: '2x max' },
-  { name: 'Upgrade 5', cost: 150, layer: '3', linkTo: '1.5x spawnRate', upgrade: '2x luck, 1.5x max' },
+  { name: 'Upgrade 6', cost: 250, layer: '3', linkTo: 'Upgrade 3', upgrade: [{ type: 'luck', value: 2.5 }] },
+  { name: 'Upgrade 7', cost: 150, layer: '3', linkTo: 'Upgrade 4', upgrade: [{ type: 'spawn rate', value: 1.5 }, { type: 'player range', value: 10 }] },
+  { name: 'Upgrade 8', cost: 75, layer: '3', linkTo: 'Upgrade 4, Upgrade 5', upgrade: [{ type: 'max dots', value: 2 }] },
+  { name: 'Upgrade 9', cost: 200, layer: '3', linkTo: 'Upgrade 5', upgrade: [{ type: 'luck', value: 2 }, { type: 'max dots', value: 1.5 }] },
 
-  { name: '+ luck', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x luck' },
-  { name: '+ max', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x max' },
-  { name: '+ playerSpeed', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x playerSpeed' },
-  { name: '+ spawnRate', cost: 150, layer: '4', linkTo: 'Upgrade 3', upgrade: '2x spawnRate' },
+  { name: 'Upgrade 10', cost: 1200, layer: '4', linkTo: 'Upgrade 7', upgrade: [{ type: 'luck', value: 1.5 }] },
+  { name: 'Upgrade 11', cost: 1250, layer: '4', linkTo: 'Upgrade 7', upgrade: [{ type: 'spawn rate', value: 1.2 }, { type: 'max dots', value: 1.2 }] },
+  { name: 'Upgrade 12', cost: 1000, layer: '4', linkTo: 'Upgrade 7', upgrade: [{ type: 'player speed', value: 1.1 }, { type: 'player range', value: 5 }] },
+  { name: 'Upgrade 13', cost: 1000, layer: '4', linkTo: 'Upgrade 7', upgrade: [{ type: 'spawn rate', value: 1.25 }] },
 ];
 
 export class UpgradeTree {
@@ -67,15 +67,12 @@ export class UpgradeTree {
     if (!upgrade.linkTo) return true;
 
     const parentNames = upgrade.linkTo.split(',').map(name => name.trim());
-    console.log(parentNames);
-    console.log(this.disabledUpgrades);
     return parentNames.every(parentName => this.disabledUpgrades.includes(parentName));
   }
 
   updateUpgradeVisibility() {
     upgrades.forEach(upgrade => {
       const upgradeElement = this.container.querySelector(`.upgrade[data-name='${upgrade.name}']`);
-      console.log(this.isUpgradeBuyable(upgrade));
       if (upgradeElement && this.isUpgradeBuyable(upgrade)) {
         upgradeElement.classList.remove('invisible');
       }
@@ -83,35 +80,42 @@ export class UpgradeTree {
   }
   
   createUpgradeElement(upgrade) {
-    const upgradeElement = document.createElement('div');
-    upgradeElement.className = 'upgrade';
+    const upgradeElement = document.createElement('upgrade-element');
     upgradeElement.dataset.name = upgrade.name;
-
-    const upgradeName = document.createElement('div');
-    upgradeName.className = 'upgrade-name';
+  
+    const upgradeName = document.createElement('upgrade-name');
     upgradeName.textContent = upgrade.name;
     upgradeElement.appendChild(upgradeName);
-
-    const upgradeCost = document.createElement('div');
-    upgradeCost.className = 'upgrade-cost';
+  
+    const upgradeFunction = document.createElement('upgrade-function');
+    
+    upgrade.upgrade.forEach(effect => {
+      const effectElement = document.createElement('div');
+      effectElement.textContent = `${effect.type}: ${effect.value}x`;
+      upgradeFunction.appendChild(effectElement);
+    });
+  
+    upgradeElement.appendChild(upgradeFunction);
+  
+    const upgradeCost = document.createElement('upgrade-cost');
     upgradeCost.textContent = `Cost: ${upgrade.cost}`;
     upgradeElement.appendChild(upgradeCost);
-
+  
     const upgradeButton = document.createElement('button');
     upgradeButton.className = 'upgrade-button';
     upgradeButton.textContent = 'Upgrade';
-
+  
     if (!this.isUpgradeBuyable(upgrade)) {
       upgradeElement.classList.add('invisible');
     }
-
+  
     if (this.disabledUpgrades.includes(upgrade.name)) {
       upgradeButton.disabled = true;
       upgradeElement.classList.add('disabled');
     }
     upgradeButton.addEventListener('click', () => this.handleUpgrade(upgrade.name, upgradeElement, upgradeButton));
     upgradeElement.appendChild(upgradeButton);
-
+  
     return upgradeElement;
   }
 
@@ -146,9 +150,9 @@ export class UpgradeTree {
     const svg = this.container.querySelector('svg');
     svg.innerHTML = ''; // Clear existing connections
     upgrades.forEach(upgrade => {
-      if (!this.container.querySelector(`.upgrade[data-name='${upgrade.name}']`).classList.contains('invisible')) {
+      if (!this.container.querySelector(`upgrade-element[data-name='${upgrade.name}']`).classList.contains('invisible')) {
         upgrade.children.forEach(child => {
-          if (!this.container.querySelector(`.upgrade[data-name='${child.name}']`).classList.contains('invisible')) {
+          if (!this.container.querySelector(`upgrade-element[data-name='${child.name}']`).classList.contains('invisible')) {
             this.drawConnection(upgrade.name, child.name);
           }
         });
@@ -157,8 +161,8 @@ export class UpgradeTree {
   }
 
   drawConnection(parentName, childName) {
-    const parentElement = this.container.querySelector(`.upgrade[data-name='${parentName}']`);
-    const childElement = this.container.querySelector(`.upgrade[data-name='${childName}']`);
+    const parentElement = this.container.querySelector(`upgrade-element[data-name='${parentName}']`);
+    const childElement = this.container.querySelector(`upgrade-element[data-name='${childName}']`);
 
     if (!parentElement || !childElement) return;
 
@@ -199,37 +203,31 @@ export class UpgradeTree {
     }
   }
 
-  applyUpgrade(upgrade) {
-    const upgradeEffects = upgrade.upgrade.split(',').map(effect => effect.trim());
+applyUpgrade(upgrade) {
+  upgrade.upgrade.forEach(({ type, value }) => {
+    switch (type) {
+      case 'luck':
+        this.stats.multiMoney *= value;
+        break;
+      case 'spawn rate':
+        this.stats.multiSpawnRate /= value;
+        break;
+      case 'max dots':
+        this.stats.maxDots *= value;
+        break;
+      case 'playerSpeed':
+        this.stats.multiSpeed *= value;
+        break;
+      case 'player range':
+        this.stats.multiRange += value;
+        break;
+      default:
+        break;
+    }
+  });
 
-    upgradeEffects.forEach(effect => {
-      const [key, value] = effect.split(' ').map(part => part.trim());
-      const sanitizedKey = key.replace(/[^0-9.]/g, '');
-      const multiplier = parseFloat(sanitizedKey);
-
-      switch (value) {
-        case 'luck':
-          this.stats.multiMoney *= multiplier;
-          break;
-        case 'spawnRate':
-          this.stats.multiSpawnRate /= multiplier;
-          break;
-        case 'max':
-          this.stats.maxDots *= multiplier;
-          break;
-        case 'playerSpeed':
-          this.stats.multiSpeed *= multiplier;
-          break;
-        case 'range':
-          this.stats.multiRange += multiplier;
-          break;
-        default:
-          break;
-      }
-    });
-
-    this.stats.saveStats();
-  }
+  this.stats.saveStats();
+}
   
   loadStats() {
     const savedStats = JSON.parse(localStorage.getItem('stats'));

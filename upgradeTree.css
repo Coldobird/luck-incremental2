@@ -1,7 +1,9 @@
 upgrade-screen {
   z-index: 1;
   background-color: #1e1e1e;
-  /* Dark mode background */
+  max-height: 80%;
+  width: 80%;
+  overflow-y: auto;
 }
 
 .hidden {
@@ -14,9 +16,11 @@ upgrade-screen {
   z-index: 10;
 }
 
-.upgrade {
+upgrade-element {
+  min-width: 120px;
   border: 1px solid #ffffff;
-  padding: 10px;
+  padding: 8px 16px;
+  gap: 4px;
   background-color: #464545;
   display: flex;
   flex-shrink: 0;
@@ -27,13 +31,33 @@ upgrade-screen {
   margin-left: 20px;
 }
 
+upgrade-name {
+  width: 113%;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  margin-left: -16px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #fff;
+}
+
+upgrade-screen::-webkit-scrollbar {
+  display: none;
+}
+
+upgrade-function {
+  flex-grow: 1;
+}
+
+upgrade-cost {
+  margin-top: 6px;
+}
+
 .upgrade-button {
   background-color: #333;
   color: #fff;
   border: 1px solid #fff;
   cursor: pointer;
   padding: 5px 10px;
-  margin-top: 10px;
 }
 
 svg {
