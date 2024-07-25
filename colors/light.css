@@ -1,0 +1,29 @@
+.light-colors {
+  /* Primary Colors */
+  --primary-light: #a8e6a8;
+  --primary: #4caf50;
+  --primary-dark: #45a049;
+
+  /* Background Colors */
+  --bg-light: #B9FABD;
+  --bg-medium: #c8e6c9;
+  --bg-dark: #81c784;
+
+  /* Text Colors */
+  --text-light: #ffffff;
+  --text-dark: #1b5e20;
+
+  /* Accent Colors */
+  --accent: #00c853;
+  --accent-light: #69f0ae;
+
+  /* UI Element Colors */
+  --button-bg: #4caf50;
+  --button-text: #ffffff;
+  --icon-bg: #ffffff;
+  --icon-color: #4caf50;
+
+  /* Border Colors */
+  --border-light: #F9F5E9;;
+  --border-dark: #2e7d32;
+}
