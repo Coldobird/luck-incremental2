@@ -60,7 +60,7 @@ upgrade-cost {
   padding: 5px 10px;
 }
 
-svg {
+upgrade-screen svg {
   z-index: -1;
   position: absolute;
   top: 0;

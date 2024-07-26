@@ -1,11 +1,11 @@
 import { Modal } from "./modal/Modal.js";
+import { SVGButton } from "./SVGButton.js";
 export class Navigation {
   constructor({ upgradeContainer, upgradeScreen }) {
     this.upgradeContainer = upgradeContainer
     this.upgradeScreen = upgradeScreen
     this.gameScreen = document.querySelector('game-screen');
     this.backButton = document.querySelector('.back-button');
-    this.upgradeButton = document.querySelector('.nav-upgrade-button');
     this.resetButton = document.querySelector('.nav-reset-button');
 
     this.resetModal = new Modal({
@@ -25,20 +25,27 @@ export class Navigation {
   };
 
   setup() {
-    this.upgradeButton.addEventListener('click', () => this.goToUpgrades());
+    const fileButton = new SVGButton({
+      svg: '/midia/svg/IconUpgradeBtn.svg',
+      class: 'nav-button',
+      onClick: () => this.goToUpgrades(),
+    });
+    const nav = document.querySelector("navigation-spacing")
+    nav.appendChild(fileButton.getButton())
+
     this.backButton.addEventListener('click', () => this.goToMain());
 
-    this.resetButton.addEventListener('click', () => {
-      this.resetModal.onConfirm(() => {
-        localStorage.clear();
-        window.location.reload();
-      });
-      
-      this.resetModal.onCancel(() => {
-        this.resetModal.hide();
-      });
+    // this.resetButton.addEventListener('click', () => {
+    //   this.resetModal.onConfirm(() => {
+    //     localStorage.clear();
+    //     window.location.reload();
+    //   });
 
-      this.resetModal.show();
-    });
+    //   this.resetModal.onCancel(() => {
+    //     this.resetModal.hide();
+    //   });
+
+    //   this.resetModal.show();
+    // });
   }
 }
