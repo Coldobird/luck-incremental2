@@ -1,9 +1,18 @@
 upgrade-screen {
   z-index: 1;
   background-color: #1e1e1e;
+  width: 90vmin;
+  max-width: 80%;
   max-height: 80%;
-  width: 80%;
+  aspect-ratio: 1/1;
   overflow-y: auto;
+
+  border: 20px solid var(--border-light);
+  box-shadow: 3px 3px 8px 4px #00000014;
+  border-radius: 64px;
+
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .hidden {

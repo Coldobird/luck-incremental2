@@ -16,26 +16,41 @@ html {
   background-image: url('/midia/svg/BgTexture.svg');
   background-size: 120%;
   background-position: center;
+
+  display: flex;
+  flex-direction: column;
 }
 
 game-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  width: 90vmin;
+  max-width: 80%;
+  max-height: 80%;
+  aspect-ratio: 1/1;
 }
 
 navigation-menu {
   position: relative;
   display: flex;
+  flex-direction: row;
   align-items: center;
   height: 8%;
   margin-top: -3.5%;
+  gap: 24px;
+  z-index: 1;
+}
+
+navigation-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 80%;
 }
 
 navigation-spacing {
@@ -49,9 +64,24 @@ navigation-spacing {
   justify-content: space-between;
 }
 
-navigation-menu img {
+navigation-menu img, navigation-menu simple-nav-bg {
   display: block;
   height: 100%;
+}
+
+navigation-menu simple-nav-bg {
+  position: absolute;
+  z-index: 0;
+
+  display: block;
+  height: 100%;
+  aspect-ratio: 1/1;
+  background-color: var(--border-light);
+  border-radius: 100%;
+}
+
+navigation-menu button.main {
+  height: 80% !important;
 }
 
 .nav-button:not(.back-button) {
@@ -59,14 +89,21 @@ navigation-menu img {
   outline: none;
   border: none;
   background-color: transparent;
+  z-index: 1;
 
   height: 100%;
   border-radius: 100%;
   aspect-ratio: 1/1;
 }
 
+
 button svg {
   height: 50%;
+}
+
+button.nav-reset-button svg {
+  margin-top: 5px;
+  height: 56%;
 }
 
 .nav-button.back-button {
@@ -78,10 +115,6 @@ button svg {
 
 canvas {
   position: relative;
-  width: 90vmin;
-  height: 90vmin;
-  max-width: 768px;
-  max-height: 768px;
   background-color: var(--bg-medium);
   border: 20px solid var(--border-light);
   box-shadow: 3px 3px 8px 4px #00000014;
@@ -112,7 +145,7 @@ joystick-nub {
 stats-container {
   display: flex;
   position: absolute;
-  top: 0;
+  top: 1%;
   left: 0;
   width: 100%;
   flex-direction: column;

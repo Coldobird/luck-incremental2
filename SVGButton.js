@@ -26,9 +26,6 @@ export class SVGButton {
   postProcessSVG() {
     const svg = this.button.querySelector('svg');
     if (svg) {
-      // svg.setAttribute('width', this.options.width);
-      // svg.setAttribute('height', this.options.height);
-
       const paths = svg.querySelectorAll('path');
       paths.forEach(path => {
         path.setAttribute('fill', this.options.defaultFill);
